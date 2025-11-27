@@ -12,6 +12,8 @@ interface Props {
 }
 
 export const PageContent: React.FC<Props> = ({ product }) => {
+  const [quantity, setQuantity] = React.useState(1);
+
   // State to hold selected options
   const [selectedOptions, setSelectedOptions] = React.useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
@@ -36,6 +38,14 @@ export const PageContent: React.FC<Props> = ({ product }) => {
     const cart = await createCart({ lines: [{ merchandiseId: activeVariant?.id || '', quantity: 1 }] });
 
     window.location.href = cart?.checkoutUrl;
+  }
+
+  const handleAddToCart = async () => {
+    const cart = await createCart({ lines: [{ merchandiseId: activeVariant?.id || '', quantity: quantity }] });
+
+    setQuantity(prev => prev + 1);
+
+    localStorage.setItem('cartId', cart?.id as string);
   }
 
   return (
@@ -85,7 +95,10 @@ export const PageContent: React.FC<Props> = ({ product }) => {
             </button>
           </div>
           <div className="mt-auto">
-            <button className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors">
+            <button
+              onClick={handleAddToCart}
+              className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+            >
               Add to cart
             </button>
           </div>
