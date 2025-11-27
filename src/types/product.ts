@@ -7,3 +7,12 @@ export type Product = {
   description: string;
   currencyCode: string;
 }
+
+export type ProductOption = {
+  id: string;
+  name: string;
+  optionValues: {
+    id: string;
+    name: string;
+  }[];
+};
