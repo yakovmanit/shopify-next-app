@@ -31,6 +31,8 @@ export const PageContent: React.FC<Props> = ({ product }) => {
 
   const options = product?.options;
 
+  console.log(activeVariant);
+
   return (
     <Container>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 py-8 md:py-12">
@@ -67,7 +69,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
               )
             }
 
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{product?.priceRange.maxVariantPrice.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
+          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{activeVariant.price.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
 
           <div className="mt-auto">
             <button className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors">
