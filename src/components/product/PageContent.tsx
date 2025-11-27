@@ -69,7 +69,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
               )
             }
 
-          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{activeVariant.price.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
+          <p className="text-2xl md:text-3xl font-semibold text-gray-900">{activeVariant?.price.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
 
           <div className="mt-auto">
             <button className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors">
