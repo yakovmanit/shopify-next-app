@@ -1,7 +1,12 @@
+import {Container} from "@/components/ui";
+import {ProductList} from "@/components/product";
+
 export default function Home() {
   return (
     <div>
-      Home
+      <Container>
+        <ProductList />
+      </Container>
     </div>
   );
 }
