@@ -1,13 +1,25 @@
+'use client';
+
 import React from 'react';
+import {CartDrawer} from "@/components/cart-drawer";
+import {Container} from "@/components/ui";
+import {ShoppingBag} from "lucide-react";
 
-interface Props {
-  className?: string;
-}
+export const Header: React.FC = () => {
+  const [isCartOpen, setIsCartOpen] = React.useState(false);
 
-export const Header: React.FC<Props> = ({ className }) => {
   return (
     <header className=':bg-gray-100'>
-      header
+      <Container className='flex items-center justify-between py-6 px-4'>
+        <button className='ml-auto cursor-pointer p-2' onClick={() => setIsCartOpen(true)}>
+          <ShoppingBag />
+        </button>
+      </Container>
+
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+      />
     </header>
   );
 };
