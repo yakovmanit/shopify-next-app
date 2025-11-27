@@ -48,25 +48,24 @@ export const PageContent: React.FC<Props> = ({ product }) => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{product?.title}</h1>
           <p className="text-gray-600 leading-relaxed">{product?.description}</p>
 
-          <div className="py-4 border-y border-gray-200">
             {/* Variant options */}
             {
               options && (
-                options.map(option => (
-                  <Option
-                    key={option.id}
-                    option={option}
-                    selected={selectedOptions[option.name]}
-                    onSelect={(value) => setSelectedOptions(prev => ({
-                      ...prev,
-                      [option.name]: value
-                    }))}
-                  />
-                ))
+                <div className="py-4 border-y border-gray-200">
+                  {options.map(option => (
+                    <Option
+                      key={option.id}
+                      option={option}
+                      selected={selectedOptions[option.name]}
+                      onSelect={(value) => setSelectedOptions(prev => ({
+                        ...prev,
+                        [option.name]: value
+                      }))}
+                    />
+                  ))}
+                </div>
               )
             }
-
-          </div>
 
           <p className="text-2xl md:text-3xl font-semibold text-gray-900">{product?.priceRange.maxVariantPrice.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
 
