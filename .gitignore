@@ -43,3 +43,6 @@ next-env.d.ts
 # IDE files
 .vscode/
 .idea/
+
+# Shopify generated query Types
+src/types/storefront
