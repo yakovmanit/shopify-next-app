@@ -43,5 +43,5 @@ export async function getProductsFromCollection() {
 
   const response: GetProductsFromCollectionQuery = await ShopifyData(query);
 
-  return response?.collection?.products?.edges ?? [];
+  return response?.collection?.products?.edges.flatMap(({node}) => node);
 }
