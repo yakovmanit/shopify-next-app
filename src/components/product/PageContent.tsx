@@ -5,6 +5,7 @@ import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
+import {createCart} from "@/services/create-cart";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
@@ -31,7 +32,11 @@ export const PageContent: React.FC<Props> = ({ product }) => {
 
   const options = product?.options;
 
-  console.log(activeVariant);
+  const handleBuyNow = async () => {
+    const cart = await createCart({ lines: [{ merchandiseId: activeVariant?.id || '', quantity: 1 }] });
+
+    window.location.href = cart?.checkoutUrl;
+  }
 
   return (
     <Container>
@@ -71,6 +76,14 @@ export const PageContent: React.FC<Props> = ({ product }) => {
 
           <p className="text-2xl md:text-3xl font-semibold text-gray-900">{activeVariant?.price.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
 
+          <div className="mt-auto">
+            <button
+              onClick={handleBuyNow}
+              className="w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+            >
+              Buy Now
+            </button>
+          </div>
           <div className="mt-auto">
             <button className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors">
               Add to cart
