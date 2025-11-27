@@ -11,8 +11,6 @@ interface Props {
 }
 
 export const PageContent: React.FC<Props> = ({ product }) => {
-  console.log('product: ', product);
-
   // State to hold selected options
   const [selectedOptions, setSelectedOptions] = React.useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
@@ -30,9 +28,6 @@ export const PageContent: React.FC<Props> = ({ product }) => {
       );
     })?.node;
   }, [selectedOptions, product]);
-
-  // console.log('Selected options:', selectedOptions);
-  // console.log('Active variant:', activeVariant);
 
   const options = product?.options;
 
