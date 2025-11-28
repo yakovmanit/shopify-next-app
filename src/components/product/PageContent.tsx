@@ -12,8 +12,6 @@ interface Props {
 }
 
 export const PageContent: React.FC<Props> = ({ product }) => {
-  const [quantity, setQuantity] = React.useState(1);
-
   const [createCart] = useCreateCartMutation();
   const [addToCart] = useAddToCartMutation();
 
@@ -35,24 +33,24 @@ export const PageContent: React.FC<Props> = ({ product }) => {
     })?.node;
   }, [selectedOptions, product]);
 
-  console.log('activeVariant:', activeVariant);
-
   const options = product?.options;
 
-  const handleBuyNow = async () => {
+  const handleAddToCart = async (isBuyNow?: boolean) => {
     if (!activeVariant?.id) return;
 
     const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
 
     let cart;
     if (cartId) {
+      // Add to the existing cart
       cart = await addToCart({
         cartId,
-        lines: [{ merchandiseId: activeVariant.id, quantity }]
+        lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
       }).unwrap();
     } else {
+      // Create a new cart
       cart = await createCart({
-        lines: [{ merchandiseId: activeVariant.id, quantity }]
+        lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
       }).unwrap();
 
       if (cart?.id) {
@@ -60,35 +58,9 @@ export const PageContent: React.FC<Props> = ({ product }) => {
       }
     }
 
-    if (cart?.checkoutUrl) {
+    if (isBuyNow && cart?.checkoutUrl) {
       window.location.href = cart.checkoutUrl;
     }
-  }
-
-  const handleAddToCart = async () => {
-    if (!activeVariant?.id) return;
-
-    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
-
-    let cart;
-    if (cartId) {
-      // Добавить в существующую корзину
-      cart = await addToCart({
-        cartId,
-        lines: [{ merchandiseId: activeVariant.id, quantity }]
-      }).unwrap();
-    } else {
-      // Создать новую корзину
-      cart = await createCart({
-        lines: [{ merchandiseId: activeVariant.id, quantity }]
-      }).unwrap();
-
-      if (cart?.id) {
-        localStorage.setItem('cartId', cart.id);
-      }
-    }
-
-    console.log('Cart updated: ', cart);
   }
 
   return (
@@ -131,16 +103,16 @@ export const PageContent: React.FC<Props> = ({ product }) => {
 
           <div className="mt-auto">
             <button
-              onClick={handleBuyNow}
-              className="w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+              onClick={() => handleAddToCart(true)}
+              className="cursor-pointer w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
             >
               Buy Now
             </button>
           </div>
           <div className="mt-auto">
             <button
-              onClick={handleAddToCart}
-              className="w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+              onClick={() => handleAddToCart()}
+              className="cursor-pointer w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors"
             >
               Add to cart
             </button>
