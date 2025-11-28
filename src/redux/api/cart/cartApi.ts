@@ -1,131 +1,6 @@
 import { api } from '../api';
 import {AddToCartMutation, CreateCartMutation, GetCartQuery} from '@/types/storefront/storefront.generated';
-
-const CART_QUERY = `#graphql
-  query GetCart($id: ID!) {
-    cart(id: $id) {
-      id
-      createdAt
-      updatedAt
-      checkoutUrl
-      lines(first: 10) {
-        edges {
-          node {
-            id
-            quantity
-            merchandise {
-              ... on ProductVariant {
-                id
-                title
-                product {
-                  id
-                  title
-                  variants(first: 100) {
-                    edges {
-                      node {
-                        id
-                        price {
-                          amount
-                          currencyCode
-                        }
-                      }
-                    }
-                  }
-                  priceRange {
-                    maxVariantPrice {
-                      amount
-                      currencyCode
-                    }
-                  }
-                  featuredImage {
-                    altText
-                    id
-                    url
-                  }
-                }
-              }
-            }
-            attributes {
-              key
-              value
-            }
-          }
-        }
-      }
-      cost {
-        totalAmount {
-          amount
-          currencyCode
-        }
-        subtotalAmount {
-          amount
-          currencyCode
-        }
-      }
-    }
-  }
-`;
-
-const CREATE_CART_MUTATION = `#graphql
-  mutation CreateCart($input: CartInput!) {
-    cartCreate(input: $input) {
-      cart {
-        id
-        checkoutUrl
-      }
-    }
-  }
-`;
-
-const ADD_TO_CART_MUTATION = `#graphql
-  mutation AddToCart($cartId: ID!, $lines: [CartLineInput!]!) {
-    cartLinesAdd(cartId: $cartId, lines: $lines) {
-      cart {
-        id
-        checkoutUrl
-        lines(first: 10) {
-          edges {
-            node {
-              id
-              quantity
-              merchandise {
-                ... on ProductVariant {
-                  id
-                  title
-                  product {
-                    id
-                    title
-                    priceRange {
-                      maxVariantPrice {
-                        amount
-                        currencyCode
-                      }
-                    }
-                    featuredImage {
-                      altText
-                      id
-                      url
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-        cost {
-          totalAmount {
-            amount
-            currencyCode
-          }
-          subtotalAmount {
-            amount
-            currencyCode
-          }
-        }
-      }
-    }
-  }
-`;
+import {addToCartMutation, createCartMutation, getCartQuery} from "@/constants/queries";
 
 const cartApi = api
   .injectEndpoints({
@@ -135,7 +10,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: CART_QUERY,
+            query: getCartQuery,
             variables: {
               id: args.id,
             },
@@ -150,7 +25,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: CREATE_CART_MUTATION,
+            query: createCartMutation,
             variables: { input },
           },
         }),
@@ -163,7 +38,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: ADD_TO_CART_MUTATION,
+            query: addToCartMutation,
             variables: {
               cartId,
               lines,

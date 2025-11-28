@@ -14,6 +14,7 @@ export default {
         './src/lib/shopify/**/*.{js,ts}',
         './src/services/**/*.{js,ts}',
         './src/redux/api/**/*.{js,ts}',
+        './src/constants/**/**/*.{js,ts}',
       ],
       outputDir: './src/types/storefront',
     }),
