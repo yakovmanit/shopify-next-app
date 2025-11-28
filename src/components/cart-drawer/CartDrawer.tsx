@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, {useState} from 'react';
 import {Loader, X} from 'lucide-react';
 import {useGetCartQuery} from "@/redux";
 import {CartDrawerItem} from "@/components/cart-drawer/CartDrawerItem";
+import {useGetCartId} from "@/hooks";
 
 interface Props {
   isOpen: boolean;
@@ -11,12 +12,7 @@ interface Props {
 }
 
 export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
-  const [cartId] = React.useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('cartId');
-    }
-    return null;
-  });
+  const cartId = useGetCartId();
 
   const { data: cart, isFetching: isCartFetching } = useGetCartQuery(
     { id: cartId as string },
