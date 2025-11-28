@@ -1,11 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, {useState} from 'react';
 import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
 import {useAddToCartMutation, useCreateCartMutation} from "@/redux";
+import {Loader} from "lucide-react";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
@@ -14,6 +15,9 @@ interface Props {
 export const PageContent: React.FC<Props> = ({ product }) => {
   const [createCart] = useCreateCartMutation();
   const [addToCart] = useAddToCartMutation();
+
+  const [isBuyNowLoading, setIsBuyNowLoading] = useState(false);
+  const [isAddToCartLoading, setIsAddToCartLoading] = useState(false);
 
   // State to hold selected options
   const [selectedOptions, setSelectedOptions] = React.useState<Record<string, string>>(() => {
@@ -38,28 +42,39 @@ export const PageContent: React.FC<Props> = ({ product }) => {
   const handleAddToCart = async (isBuyNow?: boolean) => {
     if (!activeVariant?.id) return;
 
-    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
-
-    let cart;
-    if (cartId) {
-      // Add to the existing cart
-      cart = await addToCart({
-        cartId,
-        lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
-      }).unwrap();
+    if (isBuyNow) {
+      setIsBuyNowLoading(true);
     } else {
-      // Create a new cart
-      cart = await createCart({
-        lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
-      }).unwrap();
-
-      if (cart?.id) {
-        localStorage.setItem('cartId', cart.id);
-      }
+      setIsAddToCartLoading(true);
     }
 
-    if (isBuyNow && cart?.checkoutUrl) {
-      window.location.href = cart.checkoutUrl;
+    try {
+      const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
+
+      let cart;
+      if (cartId) {
+        // Add to the existing cart
+        cart = await addToCart({
+          cartId,
+          lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
+        }).unwrap();
+      } else {
+        // Create a new cart
+        cart = await createCart({
+          lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
+        }).unwrap();
+
+        if (cart?.id) {
+          localStorage.setItem('cartId', cart.id);
+        }
+      }
+
+      if (isBuyNow && cart?.checkoutUrl) {
+        window.location.href = cart.checkoutUrl;
+      }
+
+    } finally {
+      setIsAddToCartLoading(false);
     }
   }
 
@@ -106,7 +121,13 @@ export const PageContent: React.FC<Props> = ({ product }) => {
               onClick={() => handleAddToCart(true)}
               className="cursor-pointer w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
             >
-              Buy Now
+              {
+                isBuyNowLoading ? (
+                  <Loader className="mx-auto w-6 h-6 text-white animate-spin" />
+                ) : (
+                  <>Buy Now</>
+                )
+              }
             </button>
           </div>
           <div className="mt-auto">
@@ -114,7 +135,13 @@ export const PageContent: React.FC<Props> = ({ product }) => {
               onClick={() => handleAddToCart()}
               className="cursor-pointer w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors"
             >
-              Add to cart
+              {
+                isAddToCartLoading ? (
+                  <Loader className="mx-auto w-6 h-6 text-white animate-spin" />
+                ) : (
+                  <>Add to Cart</>
+                )
+              }
             </button>
           </div>
         </div>
