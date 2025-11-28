@@ -5,14 +5,22 @@ import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
-import {useAddToCartMutation, useCreateCartMutation} from "@/redux";
+import {useAddToCartMutation, useCreateCartMutation, useGetCartQuery} from "@/redux";
 import {Loader} from "lucide-react";
+import {useGetCartId} from "@/hooks";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
 }
 
 export const PageContent: React.FC<Props> = ({ product }) => {
+  const cartId = useGetCartId();
+
+  const { data: cart } = useGetCartQuery(
+    { id: cartId as string },
+    { skip: !cartId }
+  );
+
   const [createCart] = useCreateCartMutation();
   const [addToCart] = useAddToCartMutation();
 
@@ -36,6 +44,12 @@ export const PageContent: React.FC<Props> = ({ product }) => {
       );
     })?.node;
   }, [selectedOptions, product]);
+
+  // Check if the current product was added to the cart and is not available anymore - make buttons disabled
+  const quantityAvailable = activeVariant?.quantityAvailable;
+  const addedProductQuantity = cart?.lines?.edges?.find(({ node }) => node.merchandise.id === activeVariant?.id)?.node.quantity;
+
+  const isNoAvailable = quantityAvailable === addedProductQuantity;
 
   const options = product?.options;
 
@@ -119,7 +133,8 @@ export const PageContent: React.FC<Props> = ({ product }) => {
           <div className="mt-auto">
             <button
               onClick={() => handleAddToCart(true)}
-              className="cursor-pointer w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+              className="cursor-pointer w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isNoAvailable}
             >
               {
                 isBuyNowLoading ? (
@@ -133,13 +148,18 @@ export const PageContent: React.FC<Props> = ({ product }) => {
           <div className="mt-auto">
             <button
               onClick={() => handleAddToCart()}
-              className="cursor-pointer w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors"
+              className="cursor-pointer w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isNoAvailable}
             >
               {
                 isAddToCartLoading ? (
                   <Loader className="mx-auto w-6 h-6 text-white animate-spin" />
                 ) : (
-                  <>Add to Cart</>
+                  isNoAvailable ? (
+                    <>Out of Stock</>
+                  ) : (
+                    <>Add to Cart</>
+                  )
                 )
               }
             </button>

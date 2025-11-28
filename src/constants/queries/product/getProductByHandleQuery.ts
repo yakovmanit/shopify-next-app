@@ -17,6 +17,7 @@ export const getProductByHandleQuery = `#graphql
           node {
             id
             title
+            quantityAvailable
             selectedOptions {
               name
               value
