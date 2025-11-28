@@ -12,15 +12,19 @@ interface Props {
   quantity: number;
   image: string;
   merchandiseId: string;
+  quantityAvailable: number;
 }
 
-export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, currencyCode, quantity, image, merchandiseId }) => {
+export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, currencyCode, quantity, image, merchandiseId, quantityAvailable = 9 }) => {
   const [quantityInCart, setQuantityInCart] = useState(quantity);
 
   const [ updateItemQuantity ] = useCartLinesUpdateMutationMutation();
 
-  // TODO: add quantity available checking when shopify API is fixed
   const handleUpdateOrDeleteLineQuantity = async (action: 1 | -1 | 0) => {
+    if (action === 1 && quantityInCart === quantityAvailable) {
+      return;
+    }
+
     if (action === 0 || (action === -1 && quantityInCart === 1)) {
       await updateItemQuantity({
         cartId: localStorage.getItem('cartId') || '',

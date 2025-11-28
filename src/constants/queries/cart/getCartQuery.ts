@@ -21,6 +21,7 @@ export const getCartQuery = `#graphql
                     edges {
                       node {
                         id
+                        quantityAvailable
                         price {
                           amount
                           currencyCode

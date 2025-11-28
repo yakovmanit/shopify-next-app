@@ -23,24 +23,26 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
     { skip: !cartId }
   );
 
-  console.log('cartId from localstorage: ', cartId);
-  console.log('useGetCartQuery: ', cart);
-
   const cartItems = cart?.lines.edges.map(({ node }) => {
-    // Find the variant price based on the selected variant ID
-    const variantPrice = node.merchandise.product.variants.edges.find(
+    // Find the variant based on the selected variant ID
+    const currentVariant = node.merchandise.product.variants.edges.find(
       ({ node: variantNode }) => variantNode.id === node.merchandise.id
-    )?.node.price;
+    )
+
+    const variantPrice = currentVariant?.node.price?.amount ?? 0;
+
+    const quantityAvailable = currentVariant?.node.quantityAvailable ?? 0;
 
     return {
       id: node.id,
       title: node.merchandise.product.title,
       variant: node.merchandise.title,
-      price: variantPrice?.amount || 0,
-      currencyCode: variantPrice?.currencyCode || '',
+      price: variantPrice,
+      currencyCode: currentVariant?.node.price.currencyCode ?? '',
       quantity: node.quantity,
-      image: node.merchandise.product.featuredImage?.url || '',
+      image: node.merchandise.product.featuredImage?.url ?? '',
       merchandiseId: node.merchandise.id,
+      quantityAvailable: quantityAvailable,
     }
   }) || [];
 
@@ -95,6 +97,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
                   quantity={item.quantity}
                   image={item.image}
                   merchandiseId={item.merchandiseId}
+                  quantityAvailable={item.quantityAvailable}
                 />
               ))}
             </div>
