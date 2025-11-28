@@ -20,7 +20,16 @@ export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, cur
   const [ updateItemQuantity ] = useCartLinesUpdateMutationMutation();
 
   // TODO: add quantity available checking when shopify API is fixed
-  const handleUpdateLineQuantity = async (action: 1 | -1) => {
+  const handleUpdateOrDeleteLineQuantity = async (action: 1 | -1 | 0) => {
+    if (action === 0 || (action === -1 && quantityInCart === 1)) {
+      await updateItemQuantity({
+        cartId: localStorage.getItem('cartId') || '',
+        lines: [{ id, quantity: 0, merchandiseId }]
+      });
+
+      return;
+    }
+
     setQuantityInCart(prev => prev + action);
 
      await updateItemQuantity({
@@ -55,7 +64,7 @@ export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, cur
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center border border-gray-300 rounded-lg">
             <button
-              onClick={() => handleUpdateLineQuantity(-1)}
+              onClick={() => handleUpdateOrDeleteLineQuantity(-1)}
               className="p-1 hover:bg-white transition-colors"
             >
               <Minus className="w-3 h-3 text-gray-600" />
@@ -64,7 +73,7 @@ export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, cur
               {quantityInCart}
             </span>
             <button
-              onClick={() => handleUpdateLineQuantity(1)}
+              onClick={() => handleUpdateOrDeleteLineQuantity(1)}
               className="p-1 hover:bg-white transition-colors"
             >
               <Plus className="w-3 h-3 text-gray-600" />
@@ -78,7 +87,10 @@ export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, cur
       </div>
 
       {/* Remove Button */}
-      <button className="self-start p-2 hover:bg-white rounded-lg transition-colors">
+      <button
+        onClick={() => handleUpdateOrDeleteLineQuantity(0)}
+        className="self-start p-2 hover:bg-white rounded-lg transition-colors"
+      >
         <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500" />
       </button>
     </div>
