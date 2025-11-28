@@ -5,7 +5,7 @@ import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
-import {createCart} from "@/services/create-cart";
+import {useAddToCartMutation, useCreateCartMutation} from "@/redux";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
@@ -13,6 +13,9 @@ interface Props {
 
 export const PageContent: React.FC<Props> = ({ product }) => {
   const [quantity, setQuantity] = React.useState(1);
+
+  const [createCart] = useCreateCartMutation();
+  const [addToCart] = useAddToCartMutation();
 
   // State to hold selected options
   const [selectedOptions, setSelectedOptions] = React.useState<Record<string, string>>(() => {
@@ -35,17 +38,55 @@ export const PageContent: React.FC<Props> = ({ product }) => {
   const options = product?.options;
 
   const handleBuyNow = async () => {
-    const cart = await createCart({ lines: [{ merchandiseId: activeVariant?.id || '', quantity: 1 }] });
+    if (!activeVariant?.id) return;
 
-    window.location.href = cart?.checkoutUrl;
+    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
+
+    let cart;
+    if (cartId) {
+      cart = await addToCart({
+        cartId,
+        lines: [{ merchandiseId: activeVariant.id, quantity }]
+      }).unwrap();
+    } else {
+      cart = await createCart({
+        lines: [{ merchandiseId: activeVariant.id, quantity }]
+      }).unwrap();
+
+      if (cart?.id) {
+        localStorage.setItem('cartId', cart.id);
+      }
+    }
+
+    if (cart?.checkoutUrl) {
+      window.location.href = cart.checkoutUrl;
+    }
   }
 
   const handleAddToCart = async () => {
-    const cart = await createCart({ lines: [{ merchandiseId: activeVariant?.id || '', quantity: quantity }] });
+    if (!activeVariant?.id) return;
 
-    setQuantity(prev => prev + 1);
+    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
 
-    localStorage.setItem('cartId', cart?.id as string);
+    let cart;
+    if (cartId) {
+      // Добавить в существующую корзину
+      cart = await addToCart({
+        cartId,
+        lines: [{ merchandiseId: activeVariant.id, quantity }]
+      }).unwrap();
+    } else {
+      // Создать новую корзину
+      cart = await createCart({
+        lines: [{ merchandiseId: activeVariant.id, quantity }]
+      }).unwrap();
+
+      if (cart?.id) {
+        localStorage.setItem('cartId', cart.id);
+      }
+    }
+
+    console.log('Cart updated: ', cart);
   }
 
   return (

@@ -13,6 +13,7 @@ export default {
         './src/components/**/*.{js,ts,jsx,tsx}',
         './src/lib/shopify/**/*.{js,ts}',
         './src/services/**/*.{js,ts}',
+        './src/redux/api/**/*.{js,ts}',
       ],
       outputDir: './src/types/storefront',
     }),

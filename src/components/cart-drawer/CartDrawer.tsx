@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { X, Minus, Plus, Trash2 } from 'lucide-react';
+import {useGetCartQuery} from "@/redux";
 
 interface Props {
   isOpen: boolean;
@@ -10,26 +11,40 @@ interface Props {
 }
 
 export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
-  const cartItems = [
-    {
-      id: '1',
-      title: 'Premium Wireless Headphones',
-      variant: 'Black / Large',
-      price: 299.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop',
-    },
-    {
-      id: '2',
-      title: 'Smart Watch Series 5',
-      variant: 'Silver / 42mm',
-      price: 449.00,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=200&h=200&fit=crop',
-    },
-  ];
+  const [cartId] = React.useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('cartId');
+    }
+    return null;
+  });
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const { data: cart, isLoading } = useGetCartQuery(
+    { id: cartId as string },
+    { skip: !cartId }
+  );
+
+  console.log('cartId from localstorage: ', cartId);
+  console.log('useGetCartQuery: ', cart);
+
+  const cartItems = cart?.lines.edges.map(({ node }) => {
+    // Find the variant price based on the selected variant ID
+    const variantPrice = node.merchandise.product.variants.edges.find(
+      ({ node: variantNode }) => variantNode.id === node.merchandise.id
+    )?.node.price;
+
+    return {
+      id: node.id,
+      title: node.merchandise.product.title,
+      variant: node.merchandise.title,
+      price: variantPrice?.amount || 0,
+      quantity: node.quantity,
+      image: node.merchandise.product.featuredImage?.url || '',
+    }
+  }) || [];
+
+  console.log('cartItems: ', cartItems);
+
+  // const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   if (!isOpen) return null;
 
@@ -108,7 +123,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
                       </div>
 
                       <span className="font-semibold text-gray-900">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {item.price}
                       </span>
                     </div>
                   </div>
@@ -130,7 +145,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Subtotal</span>
               <span className="text-2xl font-bold text-gray-900">
-                ${subtotal.toFixed(2)}
+                {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
               </span>
             </div>
 
