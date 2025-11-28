@@ -1,9 +1,9 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
-import { X, Minus, Plus, Trash2 } from 'lucide-react';
+import { X } from 'lucide-react';
 import {useGetCartQuery} from "@/redux";
+import {CartDrawerItem} from "@/components/cart-drawer/CartDrawerItem";
 
 interface Props {
   isOpen: boolean;
@@ -40,6 +40,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
       currencyCode: variantPrice?.currencyCode || '',
       quantity: node.quantity,
       image: node.merchandise.product.featuredImage?.url || '',
+      merchandiseId: node.merchandise.id,
     }
   }) || [];
 
@@ -83,55 +84,17 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
           ) : (
             <div className="space-y-4">
               {cartItems.map((item) => (
-                <div
+                <CartDrawerItem
                   key={item.id}
-                  className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  {/* Product Image */}
-                  <div className="w-20 h-20 bg-white rounded-lg overflow-hidden flex-shrink-0">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 className="font-semibold text-gray-900 text-sm leading-tight">
-                        {item.title}
-                      </h3>
-                      <p className="text-xs text-gray-500 mt-1">{item.variant}</p>
-                    </div>
-
-                    {/* Quantity Controls */}
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center border border-gray-300 rounded-lg">
-                        <button className="p-1 hover:bg-white transition-colors">
-                          <Minus className="w-3 h-3 text-gray-600" />
-                        </button>
-                        <span className="px-3 text-sm font-medium text-gray-900">
-                          {item.quantity}
-                        </span>
-                        <button className="p-1 hover:bg-white transition-colors">
-                          <Plus className="w-3 h-3 text-gray-600" />
-                        </button>
-                      </div>
-
-                      <span className="font-semibold text-gray-900">
-                        {item.price} {item.currencyCode}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Remove Button */}
-                  <button className="self-start p-2 hover:bg-white rounded-lg transition-colors">
-                    <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500" />
-                  </button>
-                </div>
+                  id={item.id}
+                  title={item.title}
+                  variant={item.variant}
+                  price={item.price}
+                  currencyCode={item.currencyCode}
+                  quantity={item.quantity}
+                  image={item.image}
+                  merchandiseId={item.merchandiseId}
+                />
               ))}
             </div>
           )}

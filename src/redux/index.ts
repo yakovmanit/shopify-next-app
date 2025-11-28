@@ -1,1 +1,1 @@
-export { useGetCartQuery,  useCreateCartMutation, useAddToCartMutation } from './api/cart/cartApi';
+export { useGetCartQuery,  useCreateCartMutation, useAddToCartMutation, useCartLinesUpdateMutationMutation } from './api/cart/cartApi';

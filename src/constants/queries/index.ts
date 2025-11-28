@@ -4,3 +4,4 @@ export { getProductsFromCollectionQuery } from './product/getProductsFromCollect
 export { getCartQuery } from './cart/getCartQuery';
 export { createCartMutation } from './cart/createCartMutation';
 export { addToCartMutation } from './cart/addToCartMutation';
+export { cartLinesUpdateMutation } from './cart/cartLinesUpdateMutation';

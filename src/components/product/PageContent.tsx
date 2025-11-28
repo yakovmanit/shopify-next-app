@@ -35,6 +35,8 @@ export const PageContent: React.FC<Props> = ({ product }) => {
     })?.node;
   }, [selectedOptions, product]);
 
+  console.log('activeVariant:', activeVariant);
+
   const options = product?.options;
 
   const handleBuyNow = async () => {

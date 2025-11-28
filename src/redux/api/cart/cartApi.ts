@@ -1,11 +1,24 @@
 import { api } from '../api';
-import {AddToCartMutation, CreateCartMutation, GetCartQuery} from '@/types/storefront/storefront.generated';
-import {addToCartMutation, createCartMutation, getCartQuery} from "@/constants/queries";
+import {
+  AddToCartMutation,
+  CartLinesUpdateMutation,
+  CreateCartMutation,
+  GetCartQuery
+} from '@/types/storefront/storefront.generated';
+import {
+  addToCartMutation,
+  cartLinesUpdateMutation,
+  createCartMutation,
+  getCartQuery
+} from "@/constants/queries";
 
 const cartApi = api
   .injectEndpoints({
     endpoints: (build) => ({
-      getCart: build.query<GetCartQuery['cart'], { id: string }>({
+      getCart: build.query<
+        GetCartQuery['cart'],
+        { id: string }
+      >({
         query: (args) => ({
           url: '',
           method: 'POST',
@@ -20,7 +33,10 @@ const cartApi = api
         providesTags: ['Cart'],
       }),
 
-      createCart: build.mutation<NonNullable<CreateCartMutation['cartCreate']>['cart'], { lines: Array<{ merchandiseId: string; quantity: number }> }>({
+      createCart: build.mutation<
+        NonNullable<CreateCartMutation['cartCreate']>['cart'],
+        { lines: { merchandiseId: string; quantity: number }[] }
+      >({
         query: (input) => ({
           url: '',
           method: 'POST',
@@ -33,7 +49,10 @@ const cartApi = api
         invalidatesTags: ['Cart'],
       }),
 
-      addToCart: build.mutation<NonNullable<AddToCartMutation['cartLinesAdd']>['cart'], { cartId: string; lines: Array<{ merchandiseId: string; quantity: number }> }>({
+      addToCart: build.mutation<
+        NonNullable<AddToCartMutation['cartLinesAdd']>['cart'],
+        { cartId: string; lines: { merchandiseId: string; quantity: number }[] }
+      >({
         query: ({ cartId, lines }) => ({
           url: '',
           method: 'POST',
@@ -48,6 +67,25 @@ const cartApi = api
         transformResponse: (response: { data: AddToCartMutation }) => response.data.cartLinesAdd?.cart,
         invalidatesTags: ['Cart'],
       }),
+
+      cartLinesUpdateMutation: build.mutation<
+        CartLinesUpdateMutation,
+        { cartId: string; lines: { id: string; merchandiseId: string; quantity: number }[] }
+      >({
+        query: ({ cartId, lines }) => ({
+          url: '',
+          method: 'POST',
+          body: {
+            query: cartLinesUpdateMutation,
+            variables: {
+              cartId,
+              lines,
+            },
+          },
+        }),
+        invalidatesTags: ['Cart'],
+      }),
+
     }),
 
     overrideExisting: false,
@@ -61,4 +99,5 @@ export const {
   useGetCartQuery,
   useCreateCartMutation,
   useAddToCartMutation,
+  useCartLinesUpdateMutationMutation,
 } = cartApi;
