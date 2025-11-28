@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Minus, Plus, Trash2} from "lucide-react";
 import Image from "next/image";
 import {useCartLinesUpdateMutationMutation} from "@/redux";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, currencyCode, quantity, image, merchandiseId }) => {
-  const [quantityInCart, setQuantityInCart] = React.useState(quantity);
+  const [quantityInCart, setQuantityInCart] = useState(quantity);
 
   const [ updateItemQuantity ] = useCartLinesUpdateMutationMutation();
 

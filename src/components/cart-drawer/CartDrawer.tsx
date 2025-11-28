@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X } from 'lucide-react';
+import {Loader, X} from 'lucide-react';
 import {useGetCartQuery} from "@/redux";
 import {CartDrawerItem} from "@/components/cart-drawer/CartDrawerItem";
 
@@ -18,7 +18,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
     return null;
   });
 
-  const { data: cart, isLoading } = useGetCartQuery(
+  const { data: cart, isFetching: isCartFetching } = useGetCartQuery(
     { id: cartId as string },
     { skip: !cartId }
   );
@@ -44,7 +44,8 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
     }
   }) || [];
 
-  // console.log('cartItems: ', cartItems);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const currencyCode = cartItems[0]?.currencyCode;
 
   if (!isOpen) return null;
 
@@ -106,8 +107,14 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
             {/* Subtotal */}
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Subtotal</span>
-              <span className="text-2xl font-bold text-gray-900">
-                {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)} {cartItems[0]?.currencyCode}
+              <span className="h-8 text-2xl font-bold text-gray-900">
+                 {isCartFetching ? (
+                   <Loader className="w-6 h-6 text-blue-400 animate-spin" />
+                 ) : (
+                   <span className="text-2xl font-bold text-gray-900">
+                    {totalPrice.toFixed(2)} {currencyCode}
+                  </span>
+                 )}
               </span>
             </div>
 
