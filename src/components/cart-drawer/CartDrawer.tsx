@@ -37,14 +37,13 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
       title: node.merchandise.product.title,
       variant: node.merchandise.title,
       price: variantPrice?.amount || 0,
+      currencyCode: variantPrice?.currencyCode || '',
       quantity: node.quantity,
       image: node.merchandise.product.featuredImage?.url || '',
     }
   }) || [];
 
-  console.log('cartItems: ', cartItems);
-
-  // const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // console.log('cartItems: ', cartItems);
 
   if (!isOpen) return null;
 
@@ -123,7 +122,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
                       </div>
 
                       <span className="font-semibold text-gray-900">
-                        {item.price}
+                        {item.price} {item.currencyCode}
                       </span>
                     </div>
                   </div>
@@ -145,7 +144,7 @@ export const CartDrawer: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="flex justify-between items-center">
               <span className="text-gray-600">Subtotal</span>
               <span className="text-2xl font-bold text-gray-900">
-                {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}
+                {cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)} {cartItems[0]?.currencyCode}
               </span>
             </div>
 
