@@ -5,3 +5,5 @@ export { GET_CART_QUERY } from './cart/get-cart-query';
 export { CREATE_CART_MUTATION } from './cart/create-cart-mutation';
 export { ADD_TO_CART_MUTATION } from './cart/add-to-cart-mutation';
 export { UPDATE_CART_LINES_QUERY } from './cart/update-cart-lines-mutation';
+
+export { GET_MENU_QUERY } from './menu/get-menu-query';

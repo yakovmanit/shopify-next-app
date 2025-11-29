@@ -1,3 +1,5 @@
+'use client';
+
 import React, {useState} from 'react';
 import {CircleAlert, Minus, Plus, Trash2} from "lucide-react";
 import Image from "next/image";
@@ -16,7 +18,7 @@ interface Props {
   quantityAvailable: number;
 }
 
-export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, currencyCode, quantity, image, merchandiseId, quantityAvailable = 9 }) => {
+export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, currencyCode, quantity, image, merchandiseId, quantityAvailable }) => {
   const [quantityInCart, setQuantityInCart] = useState(quantity);
 
   const [ updateItemQuantity ] = useCartLinesUpdateMutationMutation();
