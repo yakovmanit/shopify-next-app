@@ -91,13 +91,13 @@ export const PageContent: React.FC<Props> = ({ product }) => {
           />
         </div>
 
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 h-fit">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">{product?.title}</h1>
           <p className="text-gray-600 leading-relaxed">{product?.description}</p>
 
             {/* Variant options */}
             {
-              options && (
+              options && options.length > 1 && (
                 <div className="py-4 border-y border-gray-200">
                   {options.map(option => (
                     <Option
