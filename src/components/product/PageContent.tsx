@@ -8,6 +8,7 @@ import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
 import {useAddToCartMutation, useCreateCartMutation} from "@/redux";
 import {Loader} from "lucide-react";
 import {useIsProductOutOfStock} from "@/hooks/useIsProductOutOfStock";
+import {useActiveProductVariant} from "@/hooks/useActiveProductVariant";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
@@ -21,7 +22,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
   const [isAddToCartLoading, setIsAddToCartLoading] = useState(false);
 
   // State to hold selected options
-  const [selectedOptions, setSelectedOptions] = React.useState<Record<string, string>>(() => {
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>(() => {
     const initial: Record<string, string> = {};
     product?.options?.forEach(option => {
       initial[option.name] = option.optionValues[0].name;
@@ -29,14 +30,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
     return initial;
   });
 
-  // Find the active variant
-  const activeVariant = useMemo(() => {
-    return product?.variants.edges.find(({ node }) => {
-      return node.selectedOptions.every(opt =>
-        selectedOptions[opt.name] === opt.value
-      );
-    })?.node;
-  }, [selectedOptions, product]);
+  const activeVariant = useActiveProductVariant(product, selectedOptions);
 
   const isNoAvailable = useIsProductOutOfStock(
     activeVariant?.id as string,
