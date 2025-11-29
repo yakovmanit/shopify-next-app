@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Minus, Plus, Trash2} from "lucide-react";
+import {CircleAlert, Minus, Plus, Trash2} from "lucide-react";
 import Image from "next/image";
 import {useCartLinesUpdateMutationMutation} from "@/redux";
+import toast from "react-hot-toast";
 
 interface Props {
   id: string;
@@ -22,6 +23,10 @@ export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, cur
 
   const handleUpdateOrDeleteLineQuantity = async (action: 1 | -1 | 0) => {
     if (action === 1 && quantityInCart === quantityAvailable) {
+      toast.error('This item is out of stock!', {
+        icon: <CircleAlert className="w-6 h-6 text-yellow-500" />,
+      });
+
       return;
     }
 

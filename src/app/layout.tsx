@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import {Header} from "@/components/layout";
 import {ClientProviders} from "@/components/ui";
+import {Toaster} from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,6 +21,8 @@ export default function RootLayout({
           <Header />
 
           {children}
+
+          <Toaster />
         </ClientProviders>
       </body>
     </html>
