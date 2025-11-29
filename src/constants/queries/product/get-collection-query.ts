@@ -1,6 +1,6 @@
 export const GET_COLLECTION_QUERY = `#graphql
-  query GetCollection {
-    collection(handle: "frontpage") {
+  query GetCollection($handle: String!) {
+    collection(handle: $handle) {
       id
       handle
       title

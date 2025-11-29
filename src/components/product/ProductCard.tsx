@@ -90,13 +90,13 @@ export const ProductCard: React.FC<Props> = ({ className, id, image, description
                 <button
                   onClick={() => handleAddToCart()}
                   className="cursor-pointer bg-gray-900 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={isNoAvailable}
+                  disabled={isNoAvailable || variants[0]?.quantityAvailable === 0}
                 >
                   {
                     isAddToCartLoading ? (
                       <Loader className="mx-auto w-6 h-6 text-white animate-spin" />
                     ) : (
-                      isNoAvailable ? (
+                      isNoAvailable || variants[0]?.quantityAvailable === 0 ? (
                         <>Out of Stock</>
                       ) : (
                         <ShoppingCartIcon className="w-6 h-6" />

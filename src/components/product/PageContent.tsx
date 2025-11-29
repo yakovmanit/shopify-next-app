@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useMemo, useState} from 'react';
+import React, {useState} from 'react';
 import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
@@ -120,7 +120,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
             <button
               onClick={() => handleAddToCart(true)}
               className="cursor-pointer w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isNoAvailable}
+              disabled={isNoAvailable || activeVariant?.quantityAvailable === 0}
             >
               {
                 isBuyNowLoading ? (
@@ -135,13 +135,13 @@ export const PageContent: React.FC<Props> = ({ product }) => {
             <button
               onClick={() => handleAddToCart()}
               className="cursor-pointer w-full bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={isNoAvailable}
+              disabled={isNoAvailable || activeVariant?.quantityAvailable === 0}
             >
               {
                 isAddToCartLoading ? (
                   <Loader className="mx-auto w-6 h-6 text-white animate-spin" />
                 ) : (
-                  isNoAvailable ? (
+                  isNoAvailable || activeVariant?.quantityAvailable === 0 ? (
                     <>Out of Stock</>
                   ) : (
                     <>Add to Cart</>
