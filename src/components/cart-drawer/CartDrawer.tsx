@@ -44,7 +44,7 @@ export const CartDrawer: React.FC = () => {
 
   return (
     <>
-      <button className='relative cursor-pointer p-2' onClick={() => setIsCartOpen(true)}>
+      <button className='md:ml-0 ml-auto relative cursor-pointer p-2' onClick={() => setIsCartOpen(true)}>
         <ShoppingBag />
 
         {
