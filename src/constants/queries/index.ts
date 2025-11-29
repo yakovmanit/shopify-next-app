@@ -1,5 +1,5 @@
 export { GET_PRODUCT_BY_HANDLE_QUERY } from './product/get-product-by-handle-query';
-export { GET_PRODUCT_FROM_COLLECTION } from './product/get-products-from-collection-query';
+export { GET_PRODUCT_FROM_COLLECTION } from './product/get-collection-query';
 
 export { GET_CART_QUERY } from './cart/get-cart-query';
 export { CREATE_CART_MUTATION } from './cart/create-cart-mutation';

@@ -1,5 +1,5 @@
-export const GET_PRODUCT_FROM_COLLECTION = `#graphql
-  query GetProductsFromCollection {
+export const GET_COLLECTION_QUERY = `#graphql
+  query GetCollection {
     collection(handle: "frontpage") {
       id
       handle

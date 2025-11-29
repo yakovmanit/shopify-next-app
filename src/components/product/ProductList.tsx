@@ -7,9 +7,9 @@ interface Props {
   className?: string;
 }
 
-export const ProductList: React.FC<Props> = ({ className, products }) => {
+export const ProductList: React.FC<Props> = ({ products }) => {
   return (
-    <div className='mt-20 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+    <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
       {
         products?.length === 0 ? (
           <p>No products found</p>
