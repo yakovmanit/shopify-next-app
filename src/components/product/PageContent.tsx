@@ -96,10 +96,12 @@ export const PageContent: React.FC<Props> = ({ product }) => {
           <p className="text-gray-600 leading-relaxed">{product?.description}</p>
 
             {/* Variant options */}
-            {
-              options && options.length > 1 && (
-                <div className="py-4 border-y border-gray-200">
-                  {options.map(option => (
+          {
+            options && options.some(option => option.optionValues.length >= 2) && (
+              <div className="py-4 border-y border-gray-200">
+                {options
+                  .filter(option => option.optionValues.length >= 2)
+                  .map(option => (
                     <Option
                       key={option.id}
                       option={option}
@@ -110,9 +112,9 @@ export const PageContent: React.FC<Props> = ({ product }) => {
                       }))}
                     />
                   ))}
-                </div>
-              )
-            }
+              </div>
+            )
+          }
 
           <p className="text-2xl md:text-3xl font-semibold text-gray-900">{activeVariant?.price.amount} {product?.priceRange.maxVariantPrice.currencyCode}</p>
 
