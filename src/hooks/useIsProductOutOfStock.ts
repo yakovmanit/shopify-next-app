@@ -16,7 +16,7 @@ import {Maybe} from "@/types/storefront/storefront.types";
 export const useIsProductOutOfStock = (
   currentVariantId: string,
   quantityAvailable: Maybe<number> | undefined,
-) => {
+): boolean => {
   const cartId = useGetCartId();
 
   const { data: cart } = useGetCartQuery(
