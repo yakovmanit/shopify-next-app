@@ -6,6 +6,7 @@ import {axiosInstance} from "@/services/instance";
 *
 * @param {string} query - The GraphQL query string to be sent to the Shopify API.
 * @param {object} variables - Optional variables object for the GraphQL query.
+*
 * @returns {Promise<any>} - A promise that resolves to the data returned from the Shopify API.
 * */
 

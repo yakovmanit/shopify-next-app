@@ -1,11 +1,11 @@
 'use client';
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import Link from "next/link";
 import {Loader, ShoppingCartIcon} from "lucide-react";
-import {useAddToCartMutation, useGetCartQuery} from "@/redux";
+import {useAddToCartMutation} from "@/redux";
 import {Maybe} from "@/types/storefront/storefront.types";
-import {useGetCartId} from "@/hooks";
+import {useIsProductOutOfStock} from "@/hooks/useIsProductOutOfStock";
 
 interface Props {
   id: string;
@@ -24,17 +24,12 @@ interface Props {
 }
 
 export const ProductCard: React.FC<Props> = ({ className, id, image, description, handle, price, title, currencyCode, variants }) => {
-  const cartId = useGetCartId();
-
-  const { data: cart } = useGetCartQuery(
-    { id: cartId as string },
-    { skip: !cartId }
+  const isNoAvailable = useIsProductOutOfStock(
+    variants[0].id,
+    variants[0].quantityAvailable,
   );
-  const addedProductQuantity = cart?.lines?.edges?.find(({ node }) => node.merchandise.id === variants[0]?.id)?.node.quantity;
 
   const hasVariants = variants.length > 1;
-
-  const quantityAvailable = !hasVariants ? (variants[0]?.quantityAvailable ?? 0) : undefined;
 
   const [addToCart, { isLoading: isAddToCartLoading }] = useAddToCartMutation();
 
@@ -47,10 +42,7 @@ export const ProductCard: React.FC<Props> = ({ className, id, image, description
         lines: [{merchandiseId: variants[0].id, quantity: 1}]
       });
     }
-
   }
-
-  const isNoAvailable = quantityAvailable === addedProductQuantity;
 
   return (
     <div className={className}>

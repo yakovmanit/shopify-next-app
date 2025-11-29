@@ -1,26 +1,19 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
-import {useAddToCartMutation, useCreateCartMutation, useGetCartQuery} from "@/redux";
+import {useAddToCartMutation, useCreateCartMutation} from "@/redux";
 import {Loader} from "lucide-react";
-import {useGetCartId} from "@/hooks";
+import {useIsProductOutOfStock} from "@/hooks/useIsProductOutOfStock";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
 }
 
 export const PageContent: React.FC<Props> = ({ product }) => {
-  const cartId = useGetCartId();
-
-  const { data: cart } = useGetCartQuery(
-    { id: cartId as string },
-    { skip: !cartId }
-  );
-
   const [createCart] = useCreateCartMutation();
   const [addToCart] = useAddToCartMutation();
 
@@ -37,7 +30,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
   });
 
   // Find the active variant
-  const activeVariant = React.useMemo(() => {
+  const activeVariant = useMemo(() => {
     return product?.variants.edges.find(({ node }) => {
       return node.selectedOptions.every(opt =>
         selectedOptions[opt.name] === opt.value
@@ -45,11 +38,10 @@ export const PageContent: React.FC<Props> = ({ product }) => {
     })?.node;
   }, [selectedOptions, product]);
 
-  // Check if the current product was added to the cart and is not available anymore - make buttons disabled
-  const quantityAvailable = activeVariant?.quantityAvailable;
-  const addedProductQuantity = cart?.lines?.edges?.find(({ node }) => node.merchandise.id === activeVariant?.id)?.node.quantity;
-
-  const isNoAvailable = quantityAvailable === addedProductQuantity;
+  const isNoAvailable = useIsProductOutOfStock(
+    activeVariant?.id as string,
+    activeVariant?.quantityAvailable as number,
+  );
 
   const options = product?.options;
 
