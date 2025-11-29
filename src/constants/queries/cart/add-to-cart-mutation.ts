@@ -1,4 +1,4 @@
-export const addToCartMutation = `#graphql
+export const ADD_TO_CART_MUTATION = `#graphql
   mutation AddToCart($cartId: ID!, $lines: [CartLineInput!]!) {
     cartLinesAdd(cartId: $cartId, lines: $lines) {
       cart {

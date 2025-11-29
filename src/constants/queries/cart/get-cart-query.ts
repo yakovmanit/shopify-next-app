@@ -1,4 +1,4 @@
-export const getCartQuery = `#graphql
+export const GET_CART_QUERY = `#graphql
   query GetCart($id: ID!) {
     cart(id: $id) {
       id

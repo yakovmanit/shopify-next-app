@@ -6,10 +6,10 @@ import {
   GetCartQuery
 } from '@/types/storefront/storefront.generated';
 import {
-  addToCartMutation,
-  cartLinesUpdateMutation,
-  createCartMutation,
-  getCartQuery
+  GET_CART_QUERY,
+  CREATE_CART_MUTATION,
+  ADD_TO_CART_MUTATION,
+  UPDATE_CART_LINES_QUERY,
 } from "@/constants/queries";
 
 const cartApi = api
@@ -23,7 +23,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: getCartQuery,
+            query: GET_CART_QUERY,
             variables: {
               id: args.id,
             },
@@ -41,7 +41,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: createCartMutation,
+            query: CREATE_CART_MUTATION,
             variables: { input },
           },
         }),
@@ -57,7 +57,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: addToCartMutation,
+            query: ADD_TO_CART_MUTATION,
             variables: {
               cartId,
               lines,
@@ -76,7 +76,7 @@ const cartApi = api
           url: '',
           method: 'POST',
           body: {
-            query: cartLinesUpdateMutation,
+            query: UPDATE_CART_LINES_QUERY,
             variables: {
               cartId,
               lines,

@@ -1,4 +1,4 @@
-export const getProductByHandleQuery = `#graphql
+export const GET_PRODUCT_BY_HANDLE_QUERY = `#graphql
   query GetProductByHandle($handle: String!) {
     product(handle: $handle) {
       id

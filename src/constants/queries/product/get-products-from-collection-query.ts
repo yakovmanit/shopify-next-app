@@ -1,4 +1,4 @@
-export const getProductsFromCollectionQuery = `#graphql
+export const GET_PRODUCT_FROM_COLLECTION = `#graphql
   query GetProductsFromCollection {
     collection(handle: "frontpage") {
       id
