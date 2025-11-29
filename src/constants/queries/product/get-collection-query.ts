@@ -10,6 +10,15 @@ export const GET_COLLECTION_QUERY = `#graphql
             id
             handle
             title
+            variants(first: 100) {
+              edges {
+                node {
+                  id
+                  title
+                  quantityAvailable
+                }
+              }
+            }
             priceRange {
               maxVariantPrice {
                 amount

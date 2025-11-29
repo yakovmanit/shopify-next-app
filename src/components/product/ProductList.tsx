@@ -24,8 +24,9 @@ export const ProductList: React.FC<Props> = ({ products }) => {
               handle={product.handle}
               description={product.description}
               currencyCode={product.currencyCode}
+              variants={product.variants}
             />
-        )
+          )
         )
       }
 

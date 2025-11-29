@@ -13,6 +13,11 @@ export default async function Home() {
     image: product.node.images.edges[0].node.url,
     handle: product.node.handle,
     description: product.node.description,
+    variants: product.node.variants.edges.map(variant => ({
+      id: variant.node.id,
+      title: variant.node.title,
+      quantityAvailable: variant.node.quantityAvailable,
+    })),
   }));
 
   return (
