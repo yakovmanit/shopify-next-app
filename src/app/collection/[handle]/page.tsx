@@ -9,7 +9,7 @@ interface PageProps {
 export default async function Collection({ params }: PageProps) {
   const { handle } = await params;
 
-  const collection = await getCollection(handle, 6);
+  const collection = await getCollection(handle, 3);
 
   if (!collection) {
     return <p>Collection not found</p>
