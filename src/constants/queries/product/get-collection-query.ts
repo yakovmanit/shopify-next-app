@@ -1,10 +1,10 @@
 export const GET_COLLECTION_QUERY = `#graphql
-  query GetCollection($handle: String!) {
+  query GetCollection($handle: String!, $first: Int, $after: String) {
     collection(handle: $handle) {
       id
       handle
       title
-      products(first: 25) {
+      products(first: $first, after: $after) {
         edges {
           node {
             id
@@ -40,6 +40,10 @@ export const GET_COLLECTION_QUERY = `#graphql
               }
             }
           }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
         }
       }
     }

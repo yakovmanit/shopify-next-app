@@ -1,9 +1,10 @@
 import React from 'react';
 import {ProductCard} from "./ProductCard";
 import {Product} from "@/types/product";
+import {GetCollectionQuery} from "@/types/storefront/storefront.generated";
 
 interface Props {
-  products?: Product[];
+  products?: NonNullable<GetCollectionQuery['collection']>['products']['edges'];
   className?: string;
 }
 
@@ -16,15 +17,19 @@ export const ProductList: React.FC<Props> = ({ products }) => {
         ) : (
           products?.map(product =>
             <ProductCard
-              key={product.id}
-              id={product.id}
-              title={product.title}
-              price={product.price}
-              image={product.image}
-              handle={product.handle}
-              description={product.description}
-              currencyCode={product.currencyCode}
-              variants={product.variants}
+              key={product.node.id}
+              id={product.node.id}
+              title={product.node.title}
+              price={product.node.priceRange.maxVariantPrice.amount}
+              image={product.node.images.edges[0].node.url}
+              handle={product.node.handle}
+              description={product.node.description}
+              currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
+              variants={product.node.variants.edges.map(variant => ({
+                id: variant.node.id,
+                title: variant.node.title,
+                quantityAvailable: variant.node.quantityAvailable,
+              }))}
             />
           )
         )
