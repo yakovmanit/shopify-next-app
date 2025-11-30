@@ -10,7 +10,7 @@ export default async function Home() {
       <Container>
         <CollectionSection
           title={homeCollection?.title}
-          handle="frontpage"
+          initialData={homeCollection?.products.edges ?? []}
         />
       </Container>
     </div>

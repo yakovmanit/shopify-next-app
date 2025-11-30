@@ -15,14 +15,12 @@ export default async function Collection({ params }: PageProps) {
     return <p>Collection not found</p>
   }
 
-  // TODO: pass products from server fetched collection to CollectionSection when first render !!!FOR SEO!!!
-
   return (
     <>
      <Container>
-       {/*<CollectionSection title={collection.title} products={products} />*/}
        <CollectionSection
          title={collection.title}
+         initialData={collection.products.edges}
          handle={handle}
        />
      </Container>

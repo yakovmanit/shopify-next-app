@@ -2,27 +2,38 @@
 
 import React from 'react';
 import {ProductList} from "@/components/product";
-import {Product} from "@/types/product";
 import {useGetProductsByCategoryInfiniteQuery} from "@/redux";
+import {useInfiniteScroll} from "@/hooks";
+import {Loader} from "lucide-react";
+import {GetCollectionQuery} from "@/types/storefront/storefront.generated";
 
 interface Props {
   title?: string;
-  handle: string;
-  // products?: Product[];
+  handle?: string;
+  initialData: NonNullable<GetCollectionQuery['collection']>['products']['edges'];
   className?: string;
 }
 
-// export const CollectionSection: React.FC<Props> = ({ className, title, products }) => {
-export const CollectionSection: React.FC<Props> = ({ className, title, handle }) => {
+export const CollectionSection: React.FC<Props> = ({ className, title, handle, initialData }) => {
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
-  } = useGetProductsByCategoryInfiniteQuery({ handle, first: 3 });
+  } = useGetProductsByCategoryInfiniteQuery({ handle: handle ?? '', first: 3 }, {
+    skip: !initialData || !handle,
+  });
 
-  const products = data?.pages.flatMap(page => page.edges) ?? [];
+  const { observerTarget } = useInfiniteScroll({
+    hasNextPage: hasNextPage ?? false,
+    isFetchingNextPage,
+    fetchNextPage,
+    rootMargin: '200px',
+  });
+
+  const products = data
+    ? data.pages.flatMap(page => page.edges)
+    : initialData ?? [];
 
   return (
     <div className={className}>
@@ -34,13 +45,18 @@ export const CollectionSection: React.FC<Props> = ({ className, title, handle })
 
       <ProductList products={products} />
 
+      {/* Trigger for infinite scroll to load more products */}
       {hasNextPage && (
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={isFetchingNextPage}
+        <div
+          ref={observerTarget}
+          className="h-20 flex items-center justify-center"
         >
-          {isFetchingNextPage ? 'Loading...' : 'Load More'}
-        </button>
+          {isFetchingNextPage && (
+            <div className="flex items-center">
+              <Loader className="w-6 h-6 mr-2 animate-spin" />
+            </div>
+          )}
+        </div>
       )}
     </div>
   );
