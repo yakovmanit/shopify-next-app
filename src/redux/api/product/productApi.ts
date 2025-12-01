@@ -8,7 +8,8 @@ type PageInfo = NonNullable<GetCollectionQuery['collection']>['products']['pageI
 
 type ProductFilter =
   | { available: boolean }
-  | { productType: string };
+  | { productType: string }
+  | { price: { min: number; max: number} };
 
 type CollectionProductsResult = {
   edges: ProductsPage;
@@ -21,10 +22,11 @@ const productApi = api
       getProductsByCategory: build.infiniteQuery<
         CollectionProductsResult,        // ResultType
         {
-          handle: string,                // QueryArg - 'handle', 'first', 'selectedTypes', 'isProductAvailable'
+          handle: string,                // QueryArg
           first: number,
           selectedTypes?: string[],
           isProductAvailable?: boolean,
+          price?: { min: number; max: number }
         },
         string | null                    // PageParam - cursor
       >({
@@ -38,9 +40,22 @@ const productApi = api
           },
         },
         query: ({ queryArg, pageParam }) => {
-          const filters: ProductFilter[] = [
-            ...(queryArg.isProductAvailable ? [{ available: true }] : []),
-          ];
+          const filters: ProductFilter[] = [];
+
+          if (queryArg.isProductAvailable) {
+            filters.push({
+              available: true,
+            });
+          }
+
+          if (queryArg.price) {
+            filters.push({
+              price: {
+                min: queryArg.price.min,
+                max: queryArg.price.max,
+              },
+            });
+          }
 
           if (queryArg.selectedTypes && queryArg.selectedTypes.length > 0) {
             queryArg.selectedTypes.forEach(type => {

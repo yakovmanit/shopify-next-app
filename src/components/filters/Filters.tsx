@@ -2,10 +2,12 @@
 
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import { ChevronDown } from 'lucide-react';
+import { RangeSlider } from "@/components/filters";
 
 type OpenSections = {
   type: boolean;
   availability: boolean;
+  price: boolean;
 };
 
 interface Props {
@@ -14,6 +16,9 @@ interface Props {
   productTypes: string[];
   isProductAvailable: boolean;
   setIsProductAvailable: Dispatch<SetStateAction<boolean>>;
+  priceRange: number[];
+  setPriceRange: Dispatch<SetStateAction<number[]>>;
+  maxPrice: number;
 }
 
 export const Filters: React.FC<Props> = ({
@@ -22,10 +27,14 @@ export const Filters: React.FC<Props> = ({
   productTypes,
   isProductAvailable,
   setIsProductAvailable,
+  priceRange,
+  setPriceRange,
+  maxPrice,
 }) => {
   const [openSections, setOpenSections] = useState<OpenSections>({
     type: true,
-    availability: true
+    availability: true,
+    price: true,
   });
 
   const toggleSection = (section: keyof OpenSections): void => {
@@ -93,6 +102,34 @@ export const Filters: React.FC<Props> = ({
                 </span>
               </label>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Price Range */}
+      <div className="border-b border-gray-200 pb-6 mb-6">
+        <button
+          onClick={() => toggleSection('price')}
+          className="w-full flex items-center justify-between py-2 text-left"
+        >
+          <span className="font-bold text-gray-900">Price Range</span>
+          <ChevronDown
+            className={`w-5 h-5 text-gray-600 transition-transform ${
+              openSections.price ? 'rotate-180' : ''
+            }`}
+          />
+        </button>
+
+        {openSections.price && (
+          <div className="mt-4">
+            <RangeSlider
+              min={0}
+              max={maxPrice}
+              step={1}
+              value={priceRange}
+              onValueChange={setPriceRange}
+              formatLabel={(value) => `$${value}`}
+            />
           </div>
         )}
       </div>

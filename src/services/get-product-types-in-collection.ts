@@ -1,13 +1,13 @@
 import {ShopifyData} from "@/lib";
-import {GET_PRODUCT_TYPES_IN_COLLECTION_QUERY} from "@/constants/queries";
-import {GetProductTypesInCollectionQuery} from "@/types/storefront/storefront.generated";
+import {GET_TYPES_AND_PRICES_IN_COLLECTION_QUERY} from "@/constants/queries";
+import {GetTypesAndPricesInCollectionQuery} from "@/types/storefront/storefront.generated";
 
-export async function getProductTypesInCollection(handle: string) {
+export async function getTypesAndPricesInCollection(handle: string) {
   const variables = {
     handle,
   };
 
-  const response: GetProductTypesInCollectionQuery = await ShopifyData(GET_PRODUCT_TYPES_IN_COLLECTION_QUERY, variables);
+  const response: GetTypesAndPricesInCollectionQuery = await ShopifyData(GET_TYPES_AND_PRICES_IN_COLLECTION_QUERY, variables);
 
-  return response?.collection?.products?.edges?.map(edge => edge?.node?.productType) || [];
+  return response?.collection?.products?.edges;
 }

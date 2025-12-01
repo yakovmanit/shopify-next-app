@@ -13,18 +13,35 @@ interface Props {
   initialData: NonNullable<GetCollectionQuery['collection']>['products']['edges'];
   selectedTypes?: string[];
   isProductAvailable?: boolean;
+  priceRange: number[];
   className?: string;
 }
 
-export const CollectionSection: React.FC<Props> = ({ className, title, handle, initialData, selectedTypes, isProductAvailable }) => {
+export const CollectionSection: React.FC<Props> = ({
+  className,
+  title,
+  handle,
+  initialData,
+  selectedTypes,
+  isProductAvailable,
+  priceRange,
+}) => {
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetProductsByCategoryInfiniteQuery({ handle: handle ?? '', first: 3, selectedTypes, isProductAvailable }, {
-    skip: !initialData || !handle,
-  });
+  } = useGetProductsByCategoryInfiniteQuery(
+    {
+      handle: handle ?? '',
+      first: 3,
+      selectedTypes,
+      isProductAvailable,
+      price: { min: priceRange[0], max: priceRange[1] },
+    },
+    {
+      skip: !initialData || !handle,
+    });
 
   const { observerTarget } = useInfiniteScroll({
     hasNextPage: hasNextPage ?? false,
