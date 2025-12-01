@@ -109,7 +109,7 @@ export const Menu: React.FC<Props> = ({ className, menuItems }) => {
                             {item.items.map((subItem) => (
                               <li key={subItem.id}>
                                 <Link
-                                  href={`/category/${subItem.resource?.handle || ''}`}
+                                  href={`/collection/${subItem.resource?.handle || ''}`}
                                   onClick={() => setIsMobileMenuOpen(false)}
                                   className="block px-4 py-2 text-gray-600 hover:bg-blue-50 hover:text-blue-400 rounded-lg transition-colors"
                                 >
