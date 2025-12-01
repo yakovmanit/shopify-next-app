@@ -33,4 +33,4 @@ export const GET_MENU_QUERY = `#graphql
       }
     }
   }
-`
+`;

@@ -1,6 +1,6 @@
 import {Container} from "@/components/ui";
 import {getCollection} from "@/services/get-collection";
-import {CollectionSection} from "@/components/CollectionSection";
+import {CollectionSection} from "@/components/collection";
 import Link from "next/link";
 
 export default async function Home() {

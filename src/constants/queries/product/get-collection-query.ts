@@ -1,15 +1,16 @@
 export const GET_COLLECTION_QUERY = `#graphql
-  query GetCollection($handle: String!, $first: Int, $after: String) {
+  query GetCollection($handle: String!, $first: Int, $after: String, $filters: [ProductFilter!]) {
     collection(handle: $handle) {
       id
       handle
       title
-      products(first: $first, after: $after) {
+      products(first: $first, after: $after, filters: $filters) {
         edges {
           node {
             id
             handle
             title
+            productType
             variants(first: 100) {
               edges {
                 node {

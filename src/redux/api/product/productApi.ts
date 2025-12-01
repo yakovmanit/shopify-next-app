@@ -15,9 +15,9 @@ const productApi = api
   .injectEndpoints({
     endpoints: (build) => ({
       getProductsByCategory: build.infiniteQuery<
-        CollectionProductsResult,           // ResultType
-        { handle: string, first: number },  // QueryArg - 'handle' and 'first'
-        string | null                       // PageParam - cursor
+        CollectionProductsResult,                                     // ResultType
+        { handle: string, first: number, selectedTypes?: string[] },  // QueryArg - 'handle', 'first' and 'selectedTypes'
+        string | null                                                 // PageParam - cursor
       >({
         infiniteQueryOptions: {
           initialPageParam: null,
@@ -28,20 +28,33 @@ const productApi = api
             return lastPage.pageInfo.endCursor ?? undefined;
           },
         },
-        query: ({ queryArg, pageParam }) => ({
-          url: '',
-          method: 'POST',
-          body: {
-            query: GET_COLLECTION_QUERY,
-            variables: {
-              handle: queryArg.handle,
-              first: queryArg.first,
-              after: pageParam,
+        query: ({ queryArg, pageParam }) => {
+          const filters: { productType: string; }[] = [];
+
+          if (queryArg.selectedTypes && queryArg.selectedTypes.length > 0) {
+            queryArg.selectedTypes.forEach(type => {
+              filters.push({
+                productType: type,
+              });
+            });
+          }
+
+          return {
+            url: '',
+            method: 'POST',
+            body: {
+              query: GET_COLLECTION_QUERY,
+              variables: {
+                handle: queryArg.handle,
+                first: queryArg.first,
+                after: pageParam,
+                filters: filters,
+              },
             },
-          },
-        }),
+          }
+        },
         transformResponse: (response: { data: GetCollectionQuery }) => {
-          return response.data.collection?.products ?? {
+          return response?.data?.collection?.products ?? {
             edges: [],
             pageInfo: {
               hasNextPage: false,
