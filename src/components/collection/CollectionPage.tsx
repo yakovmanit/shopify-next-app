@@ -9,23 +9,22 @@ interface Props {
   handle: string;
   collection: NonNullable<GetCollectionQuery['collection']>;
   productTypes: string[];
-  availabilityOptions: string[];
   className?: string;
 }
 
-export const CollectionPage: React.FC<Props> = ({ handle, collection, productTypes, availabilityOptions }) => {
+export const CollectionPage: React.FC<Props> = ({ handle, collection, productTypes }) => {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [selectedAvailability, setSelectedAvailability] = useState<string[]>([]);
+
+  const [isProductAvailable, setIsProductAvailable] = useState(true);
 
   return (
     <div className="flex gap-8">
       <Filters
         setSelectedTypes={setSelectedTypes}
         selectedTypes={selectedTypes}
-        selectedAvailability={selectedAvailability}
-        setSelectedAvailability={setSelectedAvailability}
         productTypes={productTypes}
-        availabilityOptions={availabilityOptions}
+        isProductAvailable={isProductAvailable}
+        setIsProductAvailable={setIsProductAvailable}
       />
 
       <CollectionSection
@@ -33,6 +32,7 @@ export const CollectionPage: React.FC<Props> = ({ handle, collection, productTyp
         initialData={collection.products.edges}
         handle={handle}
         selectedTypes={selectedTypes}
+        isProductAvailable={isProductAvailable}
         className="w-full"
       />
     </div>

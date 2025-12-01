@@ -12,16 +12,17 @@ interface Props {
   handle?: string;
   initialData: NonNullable<GetCollectionQuery['collection']>['products']['edges'];
   selectedTypes?: string[];
+  isProductAvailable?: boolean;
   className?: string;
 }
 
-export const CollectionSection: React.FC<Props> = ({ className, title, handle, initialData, selectedTypes }) => {
+export const CollectionSection: React.FC<Props> = ({ className, title, handle, initialData, selectedTypes, isProductAvailable }) => {
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetProductsByCategoryInfiniteQuery({ handle: handle ?? '', first: 3, selectedTypes }, {
+  } = useGetProductsByCategoryInfiniteQuery({ handle: handle ?? '', first: 3, selectedTypes, isProductAvailable }, {
     skip: !initialData || !handle,
   });
 

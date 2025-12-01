@@ -6,6 +6,10 @@ type ProductsPage = NonNullable<GetCollectionQuery['collection']>['products']['e
 
 type PageInfo = NonNullable<GetCollectionQuery['collection']>['products']['pageInfo'];
 
+type ProductFilter =
+  | { available: boolean }
+  | { productType: string };
+
 type CollectionProductsResult = {
   edges: ProductsPage;
   pageInfo: PageInfo;
@@ -15,9 +19,14 @@ const productApi = api
   .injectEndpoints({
     endpoints: (build) => ({
       getProductsByCategory: build.infiniteQuery<
-        CollectionProductsResult,                                     // ResultType
-        { handle: string, first: number, selectedTypes?: string[] },  // QueryArg - 'handle', 'first' and 'selectedTypes'
-        string | null                                                 // PageParam - cursor
+        CollectionProductsResult,        // ResultType
+        {
+          handle: string,                // QueryArg - 'handle', 'first', 'selectedTypes', 'isProductAvailable'
+          first: number,
+          selectedTypes?: string[],
+          isProductAvailable?: boolean,
+        },
+        string | null                    // PageParam - cursor
       >({
         infiniteQueryOptions: {
           initialPageParam: null,
@@ -29,7 +38,9 @@ const productApi = api
           },
         },
         query: ({ queryArg, pageParam }) => {
-          const filters: { productType: string; }[] = [];
+          const filters: ProductFilter[] = [
+            ...(queryArg.isProductAvailable ? [{ available: true }] : []),
+          ];
 
           if (queryArg.selectedTypes && queryArg.selectedTypes.length > 0) {
             queryArg.selectedTypes.forEach(type => {

@@ -10,27 +10,23 @@ type OpenSections = {
 
 interface Props {
   setSelectedTypes: Dispatch<SetStateAction<string[]>>;
-  setSelectedAvailability: Dispatch<SetStateAction<string[]>>;
   selectedTypes: string[];
-  selectedAvailability: string[];
   productTypes: string[];
-  availabilityOptions: string[];
+  isProductAvailable: boolean;
+  setIsProductAvailable: Dispatch<SetStateAction<boolean>>;
 }
 
 export const Filters: React.FC<Props> = ({
   selectedTypes,
   setSelectedTypes,
-  selectedAvailability,
-  setSelectedAvailability,
   productTypes,
-  availabilityOptions,
+  isProductAvailable,
+  setIsProductAvailable,
 }) => {
   const [openSections, setOpenSections] = useState<OpenSections>({
     type: true,
     availability: true
   });
-
-
 
   const toggleSection = (section: keyof OpenSections): void => {
     setOpenSections(prev => ({
@@ -47,28 +43,20 @@ export const Filters: React.FC<Props> = ({
     );
   };
 
-  const handleAvailabilityChange = (option: string): void => {
-    setSelectedAvailability(prev =>
-      prev.includes(option)
-        ? prev.filter(o => o !== option)
-        : [...prev, option]
-    );
-  };
-
   const clearAll = (): void => {
     setSelectedTypes([]);
-    setSelectedAvailability([]);
+    setIsProductAvailable(false)
   };
 
   return (
     <div className="w-80 bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-12 h-fit">
       <div className="flex items-center justify-between mb-4">
-        {(selectedTypes.length > 0 || selectedAvailability.length > 0) && (
+        {selectedTypes.length > 0 && (
           <button
             onClick={clearAll}
             className="text-sm text-blue-600 hover:text-blue-700"
           >
-            Очистити все
+            Clear All
           </button>
         )}
       </div>
@@ -123,30 +111,25 @@ export const Filters: React.FC<Props> = ({
           />
         </button>
 
-        {openSections.availability && (
-          <div className="mt-3 space-y-2">
-            {availabilityOptions?.map(option => (
-              <label
-                key={option}
-                className="flex items-center cursor-pointer group"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedAvailability.includes(option)}
-                  onChange={() => handleAvailabilityChange(option)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900">
-                  {option}
-                </span>
-              </label>
-            ))}
-          </div>
-        )}
+        <div className="mt-3 space-y-2">
+          <label
+            className="flex items-center cursor-pointer group"
+          >
+            <input
+              type="checkbox"
+              checked={isProductAvailable}
+              onChange={() => setIsProductAvailable(prev => !prev)}
+              className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900">
+              In Stock
+            </span>
+          </label>
+        </div>
       </div>
 
       {/* Selected Filters */}
-      {(selectedTypes.length > 0 || selectedAvailability.length > 0) && (
+      {(selectedTypes.length > 0 || isProductAvailable) && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <div className="text-xs text-gray-500 mb-2">Selected filters:</div>
           <div className="flex flex-wrap gap-2">
@@ -164,20 +147,19 @@ export const Filters: React.FC<Props> = ({
                 </button>
               </span>
             ))}
-            {selectedAvailability.map(option => (
+            {isProductAvailable && (
               <span
-                key={option}
-                onClick={() => handleAvailabilityChange(option)}
-                className="cursor-pointer inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-700"
+                onClick={() => setIsProductAvailable(false)}
+                className="cursor-pointer inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700"
               >
-                {option}
+                In Stock
                 <button
-                  className="cursor-pointer ml-1 hover:text-green-900"
+                  className="cursor-pointer ml-1 hover:text-blue-900"
                 >
                   ×
                 </button>
               </span>
-            ))}
+            )}
           </div>
         </div>
       )}

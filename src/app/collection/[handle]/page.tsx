@@ -7,12 +7,6 @@ interface PageProps {
   params: Promise<{ handle: string }>;
 }
 
-
-const availabilityOptions: string[] = [
-  'Available',
-  'Unavailable',
-];
-
 export default async function Collection({ params }: PageProps) {
   const { handle } = await params;
 
@@ -32,7 +26,6 @@ export default async function Collection({ params }: PageProps) {
         <CollectionPage
           handle={handle}
           collection={collection}
-          availabilityOptions={availabilityOptions}
           productTypes={uniqueProductTypes}
         />
       </Container>
