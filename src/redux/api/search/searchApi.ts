@@ -19,10 +19,13 @@ const searchApi = api
             },
           },
         }),
+        transformResponse(response: { data: GetSearchResultsQuery }) {
+          return response.data.predictiveSearch;
+        }
       }),
     }),
   });
 
 export const {
-  useGetSearchResultsQuery,
+  useLazyGetSearchResultsQuery,
 } = searchApi;

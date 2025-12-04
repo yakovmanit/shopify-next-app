@@ -7,4 +7,4 @@ export {
 
 export { useGetProductsByCategoryInfiniteQuery } from './api/product/productApi';
 
-export { useGetSearchResultsQuery } from './api/search/searchApi';
+export { useLazyGetSearchResultsQuery } from './api/search/searchApi';
