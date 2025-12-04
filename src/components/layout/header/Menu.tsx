@@ -22,7 +22,7 @@ export const Menu: React.FC<Props> = ({ className, menuItems }) => {
     <>
       {/* Desktop Menu */}
       <nav className={`hidden md:block ${className}`}>
-        <ul className="flex items-center gap-8">
+        <ul className="flex items-center gap-8 justify-center">
           {menuItems && menuItems.map((item) => (
             <li key={item.id} className="relative group">
               {item.items.length > 0 ? (
