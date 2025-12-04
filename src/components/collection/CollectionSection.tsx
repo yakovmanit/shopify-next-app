@@ -13,7 +13,7 @@ interface Props {
   initialData: NonNullable<GetCollectionQuery['collection']>['products']['edges'];
   selectedTypes?: string[];
   isProductAvailable?: boolean;
-  priceRange: number[];
+  priceRange?: number[];
   className?: string;
 }
 
@@ -26,6 +26,8 @@ export const CollectionSection: React.FC<Props> = ({
   isProductAvailable,
   priceRange,
 }) => {
+  const checkedPriceRange = priceRange ?? [0, Math.max()];
+
   const {
     data,
     fetchNextPage,
@@ -37,7 +39,7 @@ export const CollectionSection: React.FC<Props> = ({
       first: 3,
       selectedTypes,
       isProductAvailable,
-      price: { min: priceRange[0], max: priceRange[1] },
+      price: { min: checkedPriceRange[0], max: checkedPriceRange[1] },
     },
     {
       skip: !initialData || !handle,
