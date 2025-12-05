@@ -2,7 +2,9 @@ export const GET_PRODUCT_BY_HANDLE_QUERY = `#graphql
   query GetProductByHandle($handle: String!) {
     product(handle: $handle) {
       id
+      handle
       title
+      productType
       description
       options(first: 100) {
         id

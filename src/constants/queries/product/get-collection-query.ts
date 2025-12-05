@@ -11,12 +11,43 @@ export const GET_COLLECTION_QUERY = `#graphql
             handle
             title
             productType
+            description
+            options(first: 100) {
+              id
+              name
+              optionValues {
+                id
+                name
+              }
+            }
             variants(first: 100) {
               edges {
                 node {
                   id
                   title
                   quantityAvailable
+                  selectedOptions {
+                    name
+                    value
+                  }
+                  price {
+                    amount
+                    currencyCode
+                  }
+                  image {
+                    id
+                    altText
+                    url
+                  }
+                }
+              }
+            }
+            images(first: 100) {
+              edges {
+                node {
+                  id
+                  altText
+                  url
                 }
               }
             }
@@ -28,16 +59,6 @@ export const GET_COLLECTION_QUERY = `#graphql
               minVariantPrice {
                 amount
                 currencyCode
-              }
-            }
-            description
-            images(first: 5) {
-              edges {
-                node {
-                  id
-                  altText
-                  url
-                }
               }
             }
           }
