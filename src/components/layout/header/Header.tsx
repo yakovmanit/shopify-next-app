@@ -5,6 +5,7 @@ import {Menu} from "@/components/layout/header/Menu";
 import Link from "next/link";
 import {getMenu} from "@/services/get-menu";
 import {Search} from "@/components/search";
+import {Auth} from "@/components/auth";
 
 export const Header: React.FC = async () => {
   const menuItems = await getMenu('main-menu');
@@ -35,6 +36,8 @@ export const Header: React.FC = async () => {
 
         <div className="flex items-center justify-between md:w-auto">
           <Search className="ml-auto" />
+
+          <Auth />
 
           <CartDrawer />
         </div>

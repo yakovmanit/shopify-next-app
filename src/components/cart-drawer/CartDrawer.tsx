@@ -44,7 +44,7 @@ export const CartDrawer: React.FC = () => {
 
   return (
     <>
-      <button className='md:ml-0 relative cursor-pointer p-2' onClick={() => setIsCartOpen(true)}>
+      <button className='md:ml-0 relative cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition' onClick={() => setIsCartOpen(true)}>
         <ShoppingBag />
 
         {

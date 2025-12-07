@@ -42,10 +42,10 @@ export const Search: React.FC<Props> = ({ className }) => {
       {/* Search button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors"
+        className="flex items-center gap-2 px-2 py-2 text-gray-700 hover:text-gray-900 transition-colors cursor-pointer hover:bg-gray-100 rounded-lg"
         aria-label="Open search"
       >
-        <SearchIcon className="w-5 h-5" />
+        <SearchIcon className="w-6 h-6" />
       </button>
 
       {/* Search modal */}
