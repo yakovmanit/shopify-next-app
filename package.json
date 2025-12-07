@@ -26,7 +26,8 @@
     "react-redux": "^9.2.0",
     "react-slick": "^0.31.0",
     "slick-carousel": "^1.8.1",
-    "use-debounce": "^10.0.6"
+    "use-debounce": "^10.0.6",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@shopify/api-codegen-preset": "^1.2.0",
