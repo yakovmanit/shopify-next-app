@@ -8,20 +8,20 @@ interface Props {
 }
 
 export const Auth: React.FC<Props> = ({ className }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<"login" | "register">("login");
+  const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
 
-  const open = () => setIsOpen(true);
-  const close = () => {
-    setIsOpen(false);
-    setTimeout(() => setMode("login"), 300); // reset after close
+  const handleOpenAuthPopup = () => setIsAuthPopupOpen(true);
+  const handleCloseAuthPopup = () => {
+    setIsAuthPopupOpen(false);
+    setTimeout(() => setAuthMode("login"), 300);
   };
 
   return (
     <div className={className}>
       {/* Button in header */}
       <button
-        onClick={open}
+        onClick={handleOpenAuthPopup}
         className="p-2 hover:bg-gray-100 rounded-lg transition cursor-pointer"
         aria-label="Open auth"
       >
@@ -29,10 +29,10 @@ export const Auth: React.FC<Props> = ({ className }) => {
       </button>
 
       {/* Popup */}
-      {isOpen && (
+      {isAuthPopupOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={close}
+          onClick={handleCloseAuthPopup}
         >
           <div
             className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl relative"
@@ -40,7 +40,7 @@ export const Auth: React.FC<Props> = ({ className }) => {
           >
             {/* Close button */}
             <button
-              onClick={close}
+              onClick={handleCloseAuthPopup}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-900"
             >
               <X className="w-6 h-6" />
@@ -48,11 +48,11 @@ export const Auth: React.FC<Props> = ({ className }) => {
 
             {/* Title */}
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-              {mode === "login" ? "Sign in to your account" : "Create an account"}
+              {authMode === "login" ? "Sign in to your account" : "Create an account"}
             </h2>
 
             {/* FORM LOGIC */}
-            {mode === "login" ? (
+            {authMode === "login" ? (
               /* Login form */
               <form className="space-y-5">
                 <div>
@@ -85,7 +85,7 @@ export const Auth: React.FC<Props> = ({ className }) => {
                   <button
                     type="button"
                     className="text-black font-medium hover:underline"
-                    onClick={() => setMode("register")}
+                    onClick={() => setAuthMode("register")}
                   >
                     Create
                   </button>
@@ -142,7 +142,7 @@ export const Auth: React.FC<Props> = ({ className }) => {
                   <button
                     type="button"
                     className="text-black font-medium hover:underline"
-                    onClick={() => setMode("login")}
+                    onClick={() => setAuthMode("login")}
                   >
                     Sign In
                   </button>
