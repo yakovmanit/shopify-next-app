@@ -1,4 +1,4 @@
-import {axiosInstance} from "@/services/instance";
+import {axiosInstance} from "@/services";
 
 /*
 * ShopifyData

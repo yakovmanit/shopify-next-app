@@ -1,4 +1,4 @@
-import {getProductByHandle} from "@/services/get-product-by-handle";
+import {getProductByHandle} from "@/services";
 import {PageContent} from "@/components/product/PageContent";
 
 interface PageProps {

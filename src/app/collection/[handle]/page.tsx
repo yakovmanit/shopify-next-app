@@ -1,7 +1,6 @@
-import {getCollection} from "@/services/get-collection";
+import {getCollection, getTypesAndPricesInCollection} from "@/services";
 import {CollectionPage} from "@/components/collection";
 import {Container} from "@/components/ui";
-import {getTypesAndPricesInCollection} from "@/services/get-product-types-in-collection";
 
 interface PageProps {
   params: Promise<{ handle: string }>;

@@ -6,6 +6,8 @@ import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {sighUpSchema} from "@/lib";
 import {TSignUpSchema} from "@/types";
+import {createCustomer} from "@/services";
+import toast from "react-hot-toast";
 
 interface Props {
   className?: string;
@@ -31,8 +33,15 @@ export const Auth: React.FC<Props> = ({ className }) => {
   });
 
   const onSubmit = async (data: TSignUpSchema) => {
-    console.log('data: ', data);
+    const createCustomerRes = await createCustomer(data.email, data.password, data.firstName, data.lastName);
 
+    if (createCustomerRes) {
+      toast.success('Account created successfully!');
+    } else {
+      toast.error('Failed to create account. Please try again.');
+    }
+
+    setIsAuthPopupOpen(false);
     reset();
   };
 

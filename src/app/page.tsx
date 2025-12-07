@@ -1,5 +1,5 @@
 import {Container} from "@/components/ui";
-import {getCollection} from "@/services/get-collection";
+import {getCollection} from "@/services";
 import {CollectionSection} from "@/components/collection";
 import Link from "next/link";
 

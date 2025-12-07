@@ -3,7 +3,7 @@ import {CartDrawer} from "@/components/cart-drawer";
 import {Container} from "@/components/ui";
 import {Menu} from "@/components/layout/header/Menu";
 import Link from "next/link";
-import {getMenu} from "@/services/get-menu";
+import {getMenu} from "@/services";
 import {Search} from "@/components/search";
 import {Auth} from "@/components/auth";
 
