@@ -1,20 +1,8 @@
-import {Container} from "@/components/ui";
-import {cookies} from "next/headers";
-import { redirect } from 'next/navigation';
-
-export default async function Cabinet() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('customer_token')?.value;
-
-  if (!token) {
-    redirect('/');
-  }
-
+export default async function Account() {
   return (
     <div>
-      <Container>
-        Account Page
-      </Container>
+      <h1 className="text-2xl font-semibold mb-4 mt-4">Welcome to Your Account</h1>
+      <p className="text-gray-600">Here you can manage your orders, wishlist, and settings.</p>
     </div>
   );
 }

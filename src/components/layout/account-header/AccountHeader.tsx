@@ -4,6 +4,7 @@ import Link from "next/link";
 import {logout} from "@/services";
 import toast from "react-hot-toast";
 import {redirect} from "next/navigation";
+import {Container} from "@/components/ui";
 
 export const AccountHeader = () => {
   const handleLogout = async () => {
@@ -18,7 +19,7 @@ export const AccountHeader = () => {
 
   return (
     <header className="bg-white border-b border-gray-200 py-4">
-      <div className="container mx-auto px-4 flex items-center justify-between">
+      <Container className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">
           <Link href="/" className="hover:text-blue-400">
             Next Shop
@@ -31,7 +32,7 @@ export const AccountHeader = () => {
         >
           Log Out
         </button>
-      </div>
+      </Container>
     </header>
   );
 };
