@@ -73,7 +73,7 @@ export const CartDrawerItem: React.FC<Props> = ({ id, title, variant, price, cur
 
         {/* Quantity Controls */}
         <div className="flex items-center justify-between mt-2">
-          <div className="flex items-center border border-gray-300 rounded-lg">
+          <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
             <button
               onClick={() => handleUpdateOrDeleteLineQuantity(-1)}
               className="p-1 hover:bg-white transition-colors"
