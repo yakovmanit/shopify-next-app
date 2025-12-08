@@ -1,12 +1,13 @@
+'use client'
+
 import React, {Dispatch, SetStateAction} from 'react';
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {loginSchema} from "@/lib";
 import toast from "react-hot-toast";
-import {LoginResponse, TLoginSchema} from "@/types";
-import axios from "axios";
-
-const domain = process.env.NEXT_PUBLIC_HEADLESS_WEB_URL;
+import {TLoginSchema} from "@/types";
+import {login} from "@/services";
+import { useRouter } from "next/navigation";
 
 interface Props {
   closeAuthPopup: Dispatch<SetStateAction<boolean>>;
@@ -14,6 +15,8 @@ interface Props {
 }
 
 export const LoginForm: React.FC<Props> = ({ closeAuthPopup, setAuthMode }) => {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -25,13 +28,10 @@ export const LoginForm: React.FC<Props> = ({ closeAuthPopup, setAuthMode }) => {
 
   const onSubmit = async (data: TLoginSchema) => {
     try {
-      const res = await axios.post<LoginResponse>(`${domain}/api/auth/login`, {
-        email: data.email,
-        password: data.password
-      });
+      const res = await login(data.email, data.password);
 
-      if (!res.data.success) {
-        toast.error(res.data.message);
+      if (!res.success) {
+        toast.error(res.message);
         return;
       }
 
@@ -39,6 +39,9 @@ export const LoginForm: React.FC<Props> = ({ closeAuthPopup, setAuthMode }) => {
 
       closeAuthPopup(false);
       reset();
+
+      // To update server-side rendered components
+      router.refresh();
 
     } catch (error) {
       toast.error("Failed to login. Please try again.");

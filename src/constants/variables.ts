@@ -1,0 +1,1 @@
+export const domain = process.env.NEXT_PUBLIC_HEADLESS_WEB_URL;

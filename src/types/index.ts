@@ -1,3 +1,6 @@
-export type { TSignUpSchema, TLoginSchema } from './zod/auth';
+export type { TSignUpSchema, TLoginSchema } from '@/types/forms/auth';
 
-export type { LoginResponse } from './login';
+export type {
+  LoginResponse,
+  LogoutResponse
+} from './auth';
