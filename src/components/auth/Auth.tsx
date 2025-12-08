@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { User, X } from "lucide-react";
 import {RegisterForm} from "./RegisterForm";
 import {LoginForm} from "./LoginForm";
+import Link from "next/link";
 
 interface Props {
+  isUserAuthorized: boolean;
   className?: string;
 }
 
-export const Auth: React.FC<Props> = ({ className }) => {
+export const Auth: React.FC<Props> = ({ className, isUserAuthorized }) => {
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "register">("login");
 
@@ -22,13 +24,26 @@ export const Auth: React.FC<Props> = ({ className }) => {
   return (
     <div className={className}>
       {/* Button in header */}
-      <button
-        onClick={handleOpenAuthPopup}
-        className="p-2 hover:bg-gray-100 rounded-lg transition cursor-pointer"
-        aria-label="Open auth"
-      >
-        <User className="w-6 h-6 text-gray-700" />
-      </button>
+      {
+        isUserAuthorized ? (
+          <Link
+            href="/account"
+            className="block p-2 hover:bg-gray-100 rounded-lg transition cursor-pointer"
+            aria-label="Open auth"
+          >
+            <User className="w-6 h-6 text-gray-700" />
+          </Link>
+
+        ) : (
+          <button
+            onClick={handleOpenAuthPopup}
+            className="p-2 hover:bg-gray-100 rounded-lg transition cursor-pointer"
+            aria-label="Open auth"
+          >
+            <User className="w-6 h-6 text-gray-700" />
+          </button>
+        )
+      }
 
       {/* Popup */}
       {isAuthPopupOpen && (
