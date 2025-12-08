@@ -5,6 +5,7 @@ import {Loader, ShoppingBag, X} from 'lucide-react';
 import {useGetCartQuery} from "@/redux";
 import {CartDrawerItem} from "@/components/cart-drawer/CartDrawerItem";
 import {useGetCartId} from "@/hooks";
+import Link from "next/link";
 
 export const CartDrawer: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -132,9 +133,12 @@ export const CartDrawer: React.FC = () => {
                   </p>
 
                   {/* Checkout Button */}
-                  <button className="w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors">
+                  <Link
+                    href={cart?.checkoutUrl}
+                    className="block text-center w-full bg-blue-400 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+                  >
                     Proceed to Checkout
-                  </button>
+                  </Link>
 
                   {/* Continue Shopping */}
                   <button
