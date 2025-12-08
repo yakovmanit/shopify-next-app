@@ -2,9 +2,11 @@ import React, {Dispatch, SetStateAction} from 'react';
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {loginSchema} from "@/lib";
-import {createAccessToken} from "@/services";
 import toast from "react-hot-toast";
-import {TLoginSchema} from "@/types/zod/auth";
+import {LoginResponse, TLoginSchema} from "@/types";
+import axios from "axios";
+
+const domain = process.env.NEXT_PUBLIC_HEADLESS_WEB_URL;
 
 interface Props {
   closeAuthPopup: Dispatch<SetStateAction<boolean>>;
@@ -22,19 +24,28 @@ export const LoginForm: React.FC<Props> = ({ closeAuthPopup, setAuthMode }) => {
   });
 
   const onSubmit = async (data: TLoginSchema) => {
-    const token = await createAccessToken(data.email, data.password);
+    try {
+      const res = await axios.post<LoginResponse>(`${domain}/api/auth/login`, {
+        email: data.email,
+        password: data.password
+      });
 
-    if (token) {
-      toast.success('You logged in successfully!');
+      if (!res.data.success) {
+        toast.error(res.data.message);
+        return;
+      }
+
+      toast.success("Successfully logged in!");
 
       closeAuthPopup(false);
       reset();
 
-      localStorage.setItem('token', token);
+    } catch (error) {
+      toast.error("Failed to login. Please try again.");
 
-    } else {
-      toast.error('Failed to log in. Please try again.');
+      console.log("Login error: ", error);
     }
+
   };
 
   return (
