@@ -14,7 +14,7 @@ export const AccountSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 border-r border-gray-200 px-4 py-6">
+    <aside className="w-44 border-r border-gray-200 px-4 py-6 shrink-0">
       <nav className="space-y-3">
         {links.map((item) => {
           const active = pathname === item.href;
