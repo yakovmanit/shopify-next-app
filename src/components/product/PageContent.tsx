@@ -1,20 +1,32 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Image from "next/image";
 import {Option} from "@/components/product/Option";
 import {Container} from "@/components/ui";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
-import {useAddToCartMutation, useCreateCartMutation} from "@/redux";
+import {useAddToCartMutation, useCreateCartMutation, useGetCartQuery} from "@/redux";
 import {Loader} from "lucide-react";
 import {useIsProductOutOfStock} from "@/hooks/useIsProductOutOfStock";
 import {useActiveProductVariant} from "@/hooks/useActiveProductVariant";
+import {useAppDispatch, useAppSelector} from "@/redux/hooks";
+import {setCartItemsCount} from "@/redux/slices/cartSlice";
 
 interface Props {
   product: GetProductByHandleQuery["product"];
 }
 
 export const PageContent: React.FC<Props> = ({ product }) => {
+  const dispatch = useAppDispatch();
+  const cartId = useAppSelector(state => state.cart.cartId);
+
+  const { data: currentCart } = useGetCartQuery(
+    { id: cartId as string },
+    { skip: !cartId }
+  );
+
+  const isCartExists = !!currentCart;
+
   const [createCart] = useCreateCartMutation();
   const [addToCart] = useAddToCartMutation();
 
@@ -39,6 +51,7 @@ export const PageContent: React.FC<Props> = ({ product }) => {
 
   const options = product?.options;
 
+  // TODO: add hook to ADT logic. Use it here and in the ProductCard component. Separate ATC and Buy Now logic
   const handleAddToCart = async (isBuyNow?: boolean) => {
     if (!activeVariant?.id) return;
 
@@ -49,15 +62,14 @@ export const PageContent: React.FC<Props> = ({ product }) => {
     }
 
     try {
-      const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
-
       let cart;
-      if (cartId) {
-        // Add to the existing cart
-        cart = await addToCart({
+
+      // Add to the existing cart
+      if (cartId && isCartExists) {
+        await addToCart({
           cartId,
           lines: [{ merchandiseId: activeVariant.id, quantity: 1 }]
-        }).unwrap();
+        });
       } else {
         // Create a new cart
         cart = await createCart({
@@ -65,7 +77,10 @@ export const PageContent: React.FC<Props> = ({ product }) => {
         }).unwrap();
 
         if (cart?.id) {
+          localStorage.clear()
           localStorage.setItem('cartId', cart.id);
+
+          dispatch(setCartItemsCount(cart.id))
         }
       }
 

@@ -4,13 +4,13 @@ import React, {useState} from 'react';
 import {Loader, ShoppingBag, X} from 'lucide-react';
 import {useGetCartQuery} from "@/redux";
 import {CartDrawerItem} from "@/components/cart-drawer/CartDrawerItem";
-import {useGetCartId} from "@/hooks";
 import Link from "next/link";
+import {useAppSelector} from "@/redux/hooks";
 
 export const CartDrawer: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const cartId = useGetCartId();
+  const cartId = useAppSelector(state => state.cart.cartId);
 
   const { data: cart, isFetching: isCartFetching } = useGetCartQuery(
     { id: cartId as string },
@@ -49,7 +49,7 @@ export const CartDrawer: React.FC = () => {
         <ShoppingBag />
 
         {
-          cart?.lines.edges.length !== 0 && (
+          cart && cart?.lines.edges.length >= 1 && (
             <span className='absolute bottom-0 right-0 text-xs font-medium text-white bg-blue-400 rounded-full h-4 w-4 flex items-center justify-center'>
               {cart?.lines.edges.reduce((total, line) => total + line.node.quantity, 0)}
             </span>
@@ -72,9 +72,13 @@ export const CartDrawer: React.FC = () => {
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <div className="flex items-center gap-2">
                   <h2 className="text-xl font-bold text-gray-900">Shopping Cart</h2>
-                  <span className="bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded-full">
-              {cartItems.length}
-            </span>
+                  {
+                    cart && cart?.lines.edges.length >= 1 && (
+                      <span className="bg-blue-400 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                        {cart?.lines.edges.reduce((total, line) => total + line.node.quantity, 0)}
+                      </span>
+                    )
+                  }
                 </div>
                 <button
                   onClick={() => setIsCartOpen(false)}

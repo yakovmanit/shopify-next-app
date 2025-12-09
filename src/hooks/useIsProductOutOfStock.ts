@@ -1,6 +1,6 @@
-import {useGetCartId} from "@/hooks/useGetCartId";
 import {useGetCartQuery} from "@/redux";
 import {Maybe} from "@/types/storefront/storefront.types";
+import {useAppSelector} from "@/redux/hooks";
 
 /**
  * useIsProductOutOfStock
@@ -17,7 +17,7 @@ export const useIsProductOutOfStock = (
   currentVariantId: string,
   quantityAvailable: Maybe<number> | undefined,
 ): boolean => {
-  const cartId = useGetCartId();
+  const cartId = useAppSelector(state => state.cart.cartId);
 
   const { data: cart } = useGetCartQuery(
     { id: cartId as string },

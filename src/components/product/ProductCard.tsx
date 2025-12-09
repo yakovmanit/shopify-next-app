@@ -3,11 +3,13 @@
 import React, {useState} from 'react';
 import Link from "next/link";
 import {Loader, ShoppingCartIcon} from "lucide-react";
-import {useAddToCartMutation} from "@/redux";
+import {useAddToCartMutation, useCreateCartMutation, useGetCartQuery} from "@/redux";
 import {Maybe} from "@/types/storefront/storefront.types";
 import {useIsProductOutOfStock} from "@/hooks/useIsProductOutOfStock";
 import {QuickBuyPopup} from "@/components/quick-buy";
 import {GetProductByHandleQuery} from "@/types/storefront/storefront.generated";
+import {useAppDispatch, useAppSelector} from "@/redux/hooks";
+import {setCartItemsCount} from "@/redux/slices/cartSlice";
 
 interface Props {
   id: string;
@@ -27,6 +29,18 @@ interface Props {
 }
 
 export const ProductCard: React.FC<Props> = ({ className, id, image, description, handle, price, title, product, currencyCode, variants }) => {
+  const dispatch = useAppDispatch();
+  const cartId = useAppSelector(state => state.cart.cartId);
+
+  const [createCart] = useCreateCartMutation();
+
+  const { data: currentCart } = useGetCartQuery(
+    { id: cartId as string },
+    { skip: !cartId }
+  );
+
+  const isCartExists = !!currentCart;
+
   const [isQuickBuyOpen, setIsQuickBuyOpen] = useState(false);
 
   const isNoAvailable = useIsProductOutOfStock(
@@ -39,13 +53,26 @@ export const ProductCard: React.FC<Props> = ({ className, id, image, description
   const [addToCart, { isLoading: isAddToCartLoading }] = useAddToCartMutation();
 
   const handleAddToCart = async () => {
-    const cartId = typeof window !== 'undefined' ? localStorage.getItem('cartId') : null;
+    let cart;
 
-    if (cartId) {
+    // Add to the existing cart
+    if (cartId && isCartExists) {
       await addToCart({
         cartId,
         lines: [{merchandiseId: variants[0].id, quantity: 1}]
       });
+    } else {
+      // Create a new cart
+      cart = await createCart({
+        lines: [{ merchandiseId: variants[0].id, quantity: 1 }]
+      }).unwrap();
+
+      if (cart?.id) {
+        localStorage.clear()
+        localStorage.setItem('cartId', cart.id);
+
+        dispatch(setCartItemsCount(cart.id))
+      }
     }
   }
 
@@ -83,6 +110,7 @@ export const ProductCard: React.FC<Props> = ({ className, id, image, description
                     className="flex items-center gap-2 text-white bg-gray-900 py-2 px-4 rounded-lg cursor-pointer hover:bg-gray-800 transition-colors"
                     onClick={() => setIsQuickBuyOpen(true)}
                   >
+                    {/* TODO: display Out of Stock message if all variants is out of stock */}
                     Select Options
                   </button>
                 ) : (
