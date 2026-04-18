@@ -1,21 +1,32 @@
 'use client';
 
-import Link from "next/link";
-import {logout} from "@/services";
-import toast from "react-hot-toast";
-import {redirect} from "next/navigation";
-import {Container} from "@/components/ui";
+import Link from 'next/link';
+import { logout } from '@/services';
+import toast from 'react-hot-toast';
+import { Container } from '@/components/ui';
 
 export const AccountHeader = () => {
   const handleLogout = async () => {
-    const res = await logout();
+    try {
+      const res = await logout();
 
-    if (res.success) {
+      if (!res.success) {
+        toast.error('Failed to logout. Please try again.');
+        return;
+      }
+
       toast.success('You have been logged out successfully!');
 
-      redirect('/');
+      if (res.logoutUrl) {
+        window.location.href = res.logoutUrl;
+      } else {
+        window.location.href = '/';
+      }
+    } catch (err) {
+      console.error('Logout error:', err);
+      toast.error('Failed to logout. Please try again.');
     }
-  }
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 py-4">

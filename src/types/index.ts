@@ -1,6 +1,5 @@
-export type { TSignUpSchema, TLoginSchema } from '@/types/forms/auth';
-
 export type {
-  LoginResponse,
-  LogoutResponse
+  LogoutResponse,
+  SessionResponse,
+  SessionUser,
 } from './auth';

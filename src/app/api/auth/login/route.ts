@@ -1,58 +1,37 @@
-import {NextResponse} from "next/server";
-import {TLoginSchema} from "@/types";
-import {ShopifyData} from "@/lib";
-import {CREATE_ACCESS_TOKEN_MUTATION} from "@/constants/queries";
-import {CreateAccessTokenMutation} from "@/types/storefront/storefront.generated";
+import { NextRequest, NextResponse } from 'next/server';
+import {
+  buildAuthorizationUrl,
+  generateCodeVerifier,
+  generateNonce,
+  generateState,
+  validateClientOAuthConfig,
+} from '@/lib/shopify/oauth-client';
 
-export async function POST(req: Request) {
-  try {
-    const body: TLoginSchema = await req.json();
+const AUTH_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'lax' as const,
+  path: '/',
+  maxAge: 60 * 10,
+};
 
-    if (!body.email || !body.password) {
-      return NextResponse.json(
-        { success: false, message: "Email and password are required" },
-        { status: 400 }
-      );
-    }
+export async function GET(request: NextRequest) {
+  validateClientOAuthConfig();
 
-    const data: CreateAccessTokenMutation = await ShopifyData(CREATE_ACCESS_TOKEN_MUTATION, {
-      email: body.email,
-      password: body.password,
-    })
+  const verifier = generateCodeVerifier();
+  const state = generateState();
+  const nonce = generateNonce();
 
-    const result = data?.customerAccessTokenCreate;
-    const token = result?.customerAccessToken?.accessToken;
-    const error = result?.customerUserErrors?.[0];
+  const authUrl = await buildAuthorizationUrl(verifier, state, nonce);
 
-    if (!token) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: error?.message || "Invalid email or password",
-        },
-        { status: 401 }
-      );
-    }
+  const returnTo = request.nextUrl.searchParams.get('returnTo') ?? '/account';
 
-    const res = NextResponse.json({ success: true });
+  const response = NextResponse.redirect(authUrl);
 
-    const COOKIE_OPTIONS = {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict" as const,
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30,
-    };
+  response.cookies.set('shopify_oauth_verifier', verifier, AUTH_COOKIE_OPTIONS);
+  response.cookies.set('shopify_oauth_state', state, AUTH_COOKIE_OPTIONS);
+  response.cookies.set('shopify_oauth_nonce', nonce, AUTH_COOKIE_OPTIONS);
+  response.cookies.set('shopify_oauth_return_to', returnTo, AUTH_COOKIE_OPTIONS);
 
-    res.cookies.set("customer_token", token, COOKIE_OPTIONS);
-
-    return res;
-
-  } catch (error) {
-    console.error("Login error:", error);
-    return NextResponse.json(
-      { success: false, message: "Something went wrong" },
-      { status: 500 }
-    );
-  }
+  return response;
 }

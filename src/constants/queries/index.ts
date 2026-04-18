@@ -11,6 +11,3 @@ export { GET_MENU_QUERY } from './menu/get-menu-query';
 export { GET_TYPES_AND_PRICES_IN_COLLECTION_QUERY } from './filters/get-types-and-prices-in-collection-query';
 
 export { GET_SEARCH_RESULTS_QUERY } from './search/get-search-results-query';
-
-export { CREATE_CUSTOMER_MUTATION } from './customer/create-customer-mutation';
-export { CREATE_ACCESS_TOKEN_MUTATION } from './customer/create-access-token-mutation';

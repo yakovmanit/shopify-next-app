@@ -16,10 +16,10 @@ export default async function CabinetLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const token = cookieStore.get('customer_token')?.value;
+  const token = cookieStore.get('shopify_access_token')?.value;
 
   if (!token) {
-    redirect('/');
+    redirect('/api/auth/login?returnTo=/account');
   }
 
   return (

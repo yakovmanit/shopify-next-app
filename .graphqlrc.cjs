@@ -1,8 +1,7 @@
-import { shopifyApiProject, ApiType } from '@shopify/api-codegen-preset';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { shopifyApiProject, ApiType } = require('@shopify/api-codegen-preset');
 
-export default {
-  schema: 'https://shopify.dev/storefront-graphql-direct-proxy/2025-10',
-  documents: ['./src/**/*.{js,ts,jsx,tsx}'],
+module.exports = {
   projects: {
     // Default Storefront API
     default: shopifyApiProject({

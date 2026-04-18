@@ -12,7 +12,7 @@ export const Header: React.FC = async () => {
   const menuItems = await getMenu('main-menu');
 
   const cookieStore = await cookies();
-  const isUserAuthorized = !!cookieStore.get('customer_token')?.value;
+  const isUserAuthorized = !!cookieStore.get('shopify_access_token')?.value;
 
   return (
     <header className='bg-white border-b border-gray-200'>
