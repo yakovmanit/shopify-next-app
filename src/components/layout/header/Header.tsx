@@ -5,14 +5,9 @@ import {Menu} from "@/components/layout/header/Menu";
 import Link from "next/link";
 import {getMenu} from "@/services";
 import {Search} from "@/components/search";
-import {Auth} from "@/components/auth";
-import {cookies} from "next/headers";
 
 export const Header: React.FC = async () => {
   const menuItems = await getMenu('main-menu');
-
-  const cookieStore = await cookies();
-  const isUserAuthorized = !!cookieStore.get('customer_token')?.value;
 
   return (
     <header className='bg-white border-b border-gray-200'>
@@ -40,8 +35,6 @@ export const Header: React.FC = async () => {
 
         <div className="flex items-center justify-between md:w-auto">
           <Search className="ml-auto" />
-
-          <Auth isUserAuthorized={isUserAuthorized} />
 
           <CartDrawer />
         </div>
