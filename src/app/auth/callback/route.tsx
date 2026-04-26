@@ -27,6 +27,8 @@ export async function GET(request: NextRequest) {
   const config = await discoveryResponse.json();
 
   const body = new URLSearchParams({
+    'grant_type': 'authorization_code',
+    'client_id': clientId,
     'redirect_uri': `${baseStoreUrl}/auth/callback`,
     'code': code as string,
     'code_verifier': codeVerifier
