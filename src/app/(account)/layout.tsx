@@ -15,13 +15,6 @@ export default async function CabinetLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('customer_token')?.value;
-
-  if (!token) {
-    redirect('/');
-  }
-
   return (
     <div>
       <AccountHeader />
