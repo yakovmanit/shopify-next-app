@@ -1,6 +1,6 @@
 import {axiosInstance} from "@/services";
 
-/*
+/**
 * ShopifyData
 * Makes a POST request to the Shopify GraphQL API with the provided query.
 *
