@@ -1,29 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-interface OrderItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price: string;
-}
-
-interface Order {
-  id: string;
-  date: string;
-  total: string;
-  status: string;
-  itemsCount: number;
-  items: OrderItem[];
-}
-
-interface Props {
-  className?: string;
-}
-
-export const OrdersPageContent: React.FC<Props> = ({ className }) => {
-  const orders: Order[] = [
+export const OrdersPageContent= () => {
+  const orders = [
     {
       id: "1001",
       date: "2025-01-05",
