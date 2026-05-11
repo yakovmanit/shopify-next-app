@@ -15,9 +15,18 @@ export async function GET(request: NextRequest) {
   const { baseStoreUrl, clientId, shopDomain, credentials } = getStoreEnv();
 
   const params = request.nextUrl.searchParams;
-  const code = params.get('code');
 
-  const codeVerifier = cookiesStore.get('code-verifier')?.value;
+  const code = params.get('code');
+  const codeVerifier = cookiesStore.get('code_verifier')?.value;
+  cookiesStore.delete('code_verifier');
+
+  const state = params.get('state');
+  const stateVerifier = cookiesStore.get('oauth_state')?.value;
+  cookiesStore.delete('oauth_state');
+
+  if (!state || !stateVerifier || state !== stateVerifier) {
+    return NextResponse.json({message: "State mismatch"}, {status: 400});
+  }
 
   if (!shopDomain || !clientId || !baseStoreUrl || !code || !codeVerifier) {
     return NextResponse.json({message: "Necessary data not found"});

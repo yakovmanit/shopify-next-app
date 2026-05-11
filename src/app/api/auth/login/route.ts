@@ -16,7 +16,14 @@ export async function GET() {
   const verifier = await generateCodeVerifier();
   const challenge = await generateCodeChallenge(verifier);
 
-  cookiesStore.set('code-verifier', verifier);
+  cookiesStore.set('code_verifier', verifier);
+  cookiesStore.set('oauth_state', state, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 600,
+  });
 
   const discoveryResponse = await fetch(`https://${shopDomain}/.well-known/openid-configuration`);
   const authConfig = await discoveryResponse.json();
