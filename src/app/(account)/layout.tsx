@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import {AccountHeader} from "@/components/layout";
-import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
 import {AccountSidebar} from "@/components/account";
 import {Container} from "@/components/ui";
+import {getSession} from "@/lib";
+import {redirect} from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Cabinet",
@@ -15,6 +15,12 @@ export default async function CabinetLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getSession();
+
+  if (!session.isAuthenticated) {
+    redirect("/");
+  }
+
   return (
     <div>
       <AccountHeader />

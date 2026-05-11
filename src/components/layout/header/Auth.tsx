@@ -10,7 +10,7 @@ interface Props {
 export const Auth: React.FC<Props> = ({ className, isAuthenticated }) => {
   return (
     <Link
-      href={isAuthenticated ? "/account" : "/auth/login"}
+      href={isAuthenticated ? "/account" : "/api/auth/login"}
       className="flex items-center gap-2 px-2 py-2 text-gray-700 hover:text-gray-900 transition-colors cursor-pointer hover:bg-gray-100 rounded-lg"
       aria-label="Open account"
     >
