@@ -4,6 +4,7 @@ export const GET_CUSTOMER_ORDERS_QUERY = `#graphql
       orders(first: 100) {
         edges {
           node {
+            id
             name
             fulfillmentStatus
             processedAt
@@ -17,6 +18,7 @@ export const GET_CUSTOMER_ORDERS_QUERY = `#graphql
                   title
                   quantity
                   variant {
+                    id
                     selectedOptions {
                       name
                       value

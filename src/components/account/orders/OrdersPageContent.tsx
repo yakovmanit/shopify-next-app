@@ -2,44 +2,14 @@
 
 import { useState } from 'react';
 
-export const OrdersPageContent= () => {
-  const orders = [
-    {
-      id: "1001",
-      date: "2025-01-05",
-      total: "$129.99",
-      status: "Delivered",
-      itemsCount: 3,
-      items: [
-        { id: "i1", name: "Wireless Headphones", quantity: 1, price: "$79.99" },
-        { id: "i2", name: "USB-C Cable", quantity: 1, price: "$9.99" },
-        { id: "i3", name: "Phone Case", quantity: 1, price: "$40.01" },
-      ],
-    },
-    {
-      id: "1002",
-      date: "2025-02-10",
-      total: "$89.50",
-      status: "Processing",
-      itemsCount: 1,
-      items: [
-        { id: "i4", name: "Mechanical Keyboard", quantity: 1, price: "$89.50" },
-      ],
-    },
-    {
-      id: "1003",
-      date: "2025-03-02",
-      total: "$249.00",
-      status: "Shipped",
-      itemsCount: 5,
-      items: [
-        { id: "i5", name: "Office Chair Cushion", quantity: 1, price: "$49.00" },
-        { id: "i6", name: "Desk Lamp", quantity: 2, price: "$60.00" },
-        { id: "i7", name: "Notebook A5", quantity: 2, price: "$40.00" },
-      ],
-    },
-  ];
+import React from 'react';
+import {GetCustomerOrdersQuery} from "@/types/storefront/storefront.generated";
 
+interface Props {
+  orders: NonNullable<GetCustomerOrdersQuery['customer']>['orders']['edges'];
+}
+
+export const OrdersPageContent: React.FC<Props> = ({ orders }) => {
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
   const toggleOrder = (orderId: string) => {
@@ -59,28 +29,28 @@ export const OrdersPageContent= () => {
       {hasOrders && (
         <div className="space-y-4">
           {orders.map((order) => {
-            const isExpanded = expandedOrderId === order.id;
+            const isExpanded = expandedOrderId === order.node.id;
 
             return (
               <div
-                key={order.id}
+                key={order.node.id}
                 className="border border-gray-200 rounded-lg overflow-hidden"
               >
                 <button
                   type="button"
-                  onClick={() => toggleOrder(order.id)}
+                  onClick={() => toggleOrder(order.node.id)}
                   aria-expanded={isExpanded}
                   className="w-full text-left p-4 hover:bg-gray-50 transition cursor-pointer"
                 >
                   <div className="flex justify-between">
                     <div>
-                      <p className="font-medium text-lg">Order #{order.id}</p>
-                      <p className="text-sm text-gray-500">Placed on {order.date}</p>
+                      <p className="font-medium text-lg">Order {order.node.name}</p>
+                      <p className="text-sm text-gray-500">Placed on {order.node.processedAt}</p>
                     </div>
 
                     <div className="text-right">
-                      <p className="font-semibold">{order.total}</p>
-                      <p className="text-sm text-gray-500">{order.itemsCount} items</p>
+                      <p className="font-semibold">{order.node.totalPrice.amount} {order.node.totalPrice.currencyCode}</p>
+                      <p className="text-sm text-gray-500">{orders.length} items</p>
                     </div>
                   </div>
 
@@ -88,14 +58,14 @@ export const OrdersPageContent= () => {
                     <span
                       className={`inline-block text-sm px-3 py-1 rounded-full
                         ${
-                          order.status === "Delivered"
+                          order.node.fulfillmentStatus === "FULFILLED"
                             ? "bg-green-100 text-green-600"
-                            : order.status === "Shipped"
+                            : order.node.fulfillmentStatus === "IN_PROGRESS"
                               ? "bg-blue-100 text-blue-600"
                               : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
-                      {order.status}
+                      {order.node.fulfillmentStatus}
                     </span>
 
                     <span
@@ -113,16 +83,16 @@ export const OrdersPageContent= () => {
                   <div className="border-t border-gray-200 bg-gray-50 p-4">
                     <p className="text-sm font-medium text-gray-700 mb-3">Items</p>
                     <ul className="divide-y divide-gray-200">
-                      {order.items.map((item) => (
+                      {order.node.lineItems.edges.map((product) => (
                         <li
-                          key={item.id}
+                          key={product.node.variant?.id}
                           className="flex justify-between py-2 text-sm"
                         >
                           <span className="text-gray-800">
-                            {item.name}
-                            <span className="text-gray-500"> × {item.quantity}</span>
+                            {product.node.title}
+                            <span className="text-gray-500"> × {product.node.quantity}</span>
                           </span>
-                          <span className="text-gray-700">{item.price}</span>
+                          <span className="text-gray-700">{product.node.originalTotalPrice.amount} {product.node.originalTotalPrice.currencyCode}</span>
                         </li>
                       ))}
                     </ul>

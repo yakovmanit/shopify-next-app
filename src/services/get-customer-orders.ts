@@ -9,5 +9,5 @@ export async function getCustomerOrders(customerAccessToken: string) {
 
   const response: GetCustomerOrdersQuery = await ShopifyData(GET_CUSTOMER_ORDERS_QUERY, variables);
 
-  return response.customer?.orders;
+  return response.customer?.orders.edges;
 }

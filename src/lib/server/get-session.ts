@@ -1,14 +1,6 @@
 import "server-only";
 
 import {cookies} from "next/headers";
-import {getStoreEnv} from "@/lib";
-
-interface AccessTokenResponse {
-  access_token: string;
-  expires_in: number;
-  id_token: string;
-  refresh_token: string;
-}
 
 export const getSession = async () => {
   const cookiesStore = await cookies();
