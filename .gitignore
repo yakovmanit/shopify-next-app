@@ -46,6 +46,7 @@ next-env.d.ts
 
 # Shopify generated query Types
 src/types/storefront
+src/types/customer/customer.generated.d.ts
 
 # AI
 .mcp.json
