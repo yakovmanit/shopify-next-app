@@ -13,3 +13,4 @@ export { GET_TYPES_AND_PRICES_IN_COLLECTION_QUERY } from './filters/get-types-an
 export { GET_SEARCH_RESULTS_QUERY } from './search/get-search-results-query';
 
 export { GET_CUSTOMER_ORDERS_QUERY } from './customer/get-customer-orders-query';
+export { GET_CUSTOMER_ADDRESSES_QUERY } from '../../constantsAccount/get-customer-addresses-query';
