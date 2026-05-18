@@ -1,6 +1,6 @@
 import {ShopifyData} from "@/lib/shopify";
-import {GetCollectionQuery} from "@/types/storefront/storefront.generated";
-import {GET_COLLECTION_QUERY} from "@/constants/queries/product/get-collection-query";
+import {GetCollectionQuery} from "@/types/generated/storefrontapi.generated";
+import {GET_COLLECTION_QUERY} from "@/constants/queries";
 
 export async function getCollection(handle: string, first: number, after?: string) {
   const variables = {

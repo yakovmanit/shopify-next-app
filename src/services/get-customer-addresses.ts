@@ -1,6 +1,6 @@
-import {GET_CUSTOMER_ADDRESSES_QUERY} from "@/constantsAccount/get-customer-addresses-query";
 import {ShopifyCustomerData} from "@/lib/shopify";
-import {GetCustomerAddressesQuery} from "@/types/customer/customer.generated";
+import {GetCustomerAddressesQuery} from "@/types/generated/customeraccountapi.generated";
+import {GET_CUSTOMER_ADDRESSES_QUERY} from "@/constants/queries";
 
 export async function getCustomerAddresses(first: number) {
   const variables = {

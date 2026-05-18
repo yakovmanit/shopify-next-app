@@ -1,6 +1,6 @@
 import {ShopifyData} from "@/lib/shopify";
 import {GET_CUSTOMER_ORDERS_QUERY} from "@/constants/queries";
-import {GetCustomerOrdersQuery} from "@/types/storefront/storefront.generated";
+import {GetCustomerOrdersQuery} from "@/types/generated/storefrontapi.generated";
 
 export async function getCustomerOrders(customerAccessToken: string) {
   const variables = {

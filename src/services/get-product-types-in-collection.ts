@@ -1,6 +1,6 @@
 import {ShopifyData} from "@/lib";
 import {GET_TYPES_AND_PRICES_IN_COLLECTION_QUERY} from "@/constants/queries";
-import {GetTypesAndPricesInCollectionQuery} from "@/types/storefront/storefront.generated";
+import {GetTypesAndPricesInCollectionQuery} from "@/types/generated/storefrontapi.generated";
 
 export async function getTypesAndPricesInCollection(handle: string) {
   const variables = {

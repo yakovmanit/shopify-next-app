@@ -1,6 +1,6 @@
 import {api} from "@/redux/api/api";
 import {GetCollectionQuery} from "@/types/storefront/storefront.generated";
-import {GET_COLLECTION_QUERY} from "@/constants/queries/product/get-collection-query";
+import {GET_COLLECTION_QUERY} from "../../../constants/queries/storefront/product/get-collection-query";
 
 type ProductsPage = NonNullable<GetCollectionQuery['collection']>['products']['edges'];
 

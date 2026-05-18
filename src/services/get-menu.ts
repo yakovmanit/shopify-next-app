@@ -1,6 +1,6 @@
 import {ShopifyData} from "@/lib/shopify";
 import {GET_MENU_QUERY} from "@/constants/queries";
-import {GetMenuQuery} from "@/types/storefront/storefront.generated";
+import {GetMenuQuery} from "@/types/generated/storefrontapi.generated";
 
 export async function getMenu(handle: string) {
   const variables = {
