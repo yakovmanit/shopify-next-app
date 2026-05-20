@@ -1,8 +1,8 @@
-import { GetSearchResultsQuery } from "@/types/storefront/storefront.generated";
-import {api} from "../api";
+import { GetSearchResultsQuery } from '@/types/generated/storefrontapi.generated';
+import {storefrontApi} from "../api";
 import {GET_SEARCH_RESULTS_QUERY} from "@/constants/queries";
 
-const searchApi = api
+const searchApi = storefrontApi
   .injectEndpoints({
     endpoints: (build) => ({
       getSearchResults: build.query<

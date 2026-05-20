@@ -1,17 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from './slices/cartSlice';
 
-import { api } from './api/api';
+import { storefrontApi, customerAccountApi } from './api/api';
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
 
     // Endpoints
-    [api.reducerPath]: api.reducer,
+    [storefrontApi.reducerPath]: storefrontApi.reducer,
+    [customerAccountApi.reducerPath]: customerAccountApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware()
+      .concat(storefrontApi.middleware)
+      .concat(customerAccountApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

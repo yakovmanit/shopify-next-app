@@ -1,4 +1,4 @@
-import {ShopifyCustomerData} from "@/lib/shopify";
+import {ShopifyCustomerData} from "@/lib";
 import {GetCustomerAddressesQuery} from "@/types/generated/customeraccountapi.generated";
 import {GET_CUSTOMER_ADDRESSES_QUERY} from "@/constants/queries";
 

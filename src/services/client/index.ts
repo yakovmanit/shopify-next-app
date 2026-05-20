@@ -1,0 +1,1 @@
+export { getCustomerAccountApiEndpoint } from './get-customer-account-api-endpoint';

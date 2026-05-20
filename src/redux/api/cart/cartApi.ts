@@ -1,10 +1,10 @@
-import { api } from '../api';
+import { storefrontApi } from '../api';
 import {
   AddToCartMutation,
   CartLinesUpdateMutation,
   CreateCartMutation,
   GetCartQuery
-} from '@/types/storefront/storefront.generated';
+} from '@/types/generated/storefrontapi.generated';
 import {
   GET_CART_QUERY,
   CREATE_CART_MUTATION,
@@ -12,7 +12,7 @@ import {
   UPDATE_CART_LINES_QUERY,
 } from "@/constants/queries";
 
-const cartApi = api
+const cartApi = storefrontApi
   .injectEndpoints({
     endpoints: (build) => ({
       getCart: build.query<

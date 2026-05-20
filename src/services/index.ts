@@ -4,3 +4,4 @@ export { getMenu } from './get-menu';
 export { getProductByHandle } from './get-product-by-handle';
 export { getTypesAndPricesInCollection } from './get-product-types-in-collection';
 export { getCustomerOrders } from './get-customer-orders';
+export { getCustomerAddresses } from './get-customer-addresses';

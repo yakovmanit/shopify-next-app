@@ -1,6 +1,6 @@
-import {api} from "@/redux/api/api";
-import {GetCollectionQuery} from "@/types/storefront/storefront.generated";
-import {GET_COLLECTION_QUERY} from "../../../constants/queries/storefront/product/get-collection-query";
+import {storefrontApi} from "@/redux/api/api";
+import {GetCollectionQuery} from '@/types/generated/storefrontapi.generated';
+import {GET_COLLECTION_QUERY} from "@/constants/queries";
 
 type ProductsPage = NonNullable<GetCollectionQuery['collection']>['products']['edges'];
 
@@ -16,7 +16,7 @@ type CollectionProductsResult = {
   pageInfo: PageInfo;
 };
 
-const productApi = api
+const productApi = storefrontApi
   .injectEndpoints({
     endpoints: (build) => ({
       getProductsByCategory: build.infiniteQuery<

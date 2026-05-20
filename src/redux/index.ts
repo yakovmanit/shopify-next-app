@@ -8,3 +8,5 @@ export {
 export { useGetProductsByCategoryInfiniteQuery } from './api/product/productApi';
 
 export { useLazyGetSearchResultsQuery } from './api/search/searchApi';
+
+export { useGetCustomerAddressesQuery } from './api/address/addressApi';
