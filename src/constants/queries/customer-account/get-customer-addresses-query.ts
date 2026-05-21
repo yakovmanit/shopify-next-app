@@ -4,6 +4,7 @@ export const GET_CUSTOMER_ADDRESSES_QUERY = `#graphql
       addresses(first: $first) {
         edges {
           node {
+            id
             country
             territoryCode
             firstName

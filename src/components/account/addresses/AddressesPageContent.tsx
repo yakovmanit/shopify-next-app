@@ -2,54 +2,47 @@
 
 import React, { useEffect, useState } from 'react';
 import { X, Plus, Pencil, Trash2 } from 'lucide-react';
+import {useGetCustomerAddressesQuery} from "@/redux";
+import {GetCustomerAddressesQuery} from "@/types/generated/customeraccountapi.generated";
 
-interface Address {
-  id: string;
-  firstName: string;
-  lastName: string;
-  company?: string;
-  address1: string;
-  address2?: string;
-  city: string;
-  province: string;
-  zip: string;
-  country: string;
-  phone?: string;
-  isDefault?: boolean;
-}
+type Address = GetCustomerAddressesQuery['customer']['addresses']['edges'][number]['node'];
 
-const MOCK_ADDRESSES: Address[] = [
-  {
-    id: '1',
-    firstName: 'Yakiv',
-    lastName: 'Manitskiy',
-    company: 'PETS Inc.',
-    address1: '123 Main Street',
-    address2: 'Apt 4B',
-    city: 'Kyiv',
-    province: 'Kyiv Oblast',
-    zip: '01001',
-    country: 'Ukraine',
-    phone: '+380 50 123 4567',
-    isDefault: true,
-  },
-  {
-    id: '2',
-    firstName: 'Yakiv',
-    lastName: 'Manitskiy',
-    address1: '456 Office Park',
-    city: 'Lviv',
-    province: 'Lviv Oblast',
-    zip: '79000',
-    country: 'Ukraine',
-    phone: '+380 67 765 4321',
-  },
-];
+// const MOCK_ADDRESSES: Address[] = [
+//   {
+//     id: '1',
+//     firstName: 'Yakiv',
+//     lastName: 'Manitskiy',
+//     company: 'PETS Inc.',
+//     address1: '123 Main Street',
+//     address2: 'Apt 4B',
+//     city: 'Kyiv',
+//     province: 'Kyiv Oblast',
+//     zip: '01001',
+//     country: 'Ukraine',
+//     phone: '+380 50 123 4567',
+//     isDefault: true,
+//   },
+//   {
+//     id: '2',
+//     firstName: 'Yakiv',
+//     lastName: 'Manitskiy',
+//     address1: '456 Office Park',
+//     city: 'Lviv',
+//     province: 'Lviv Oblast',
+//     zip: '79000',
+//     country: 'Ukraine',
+//     phone: '+380 67 765 4321',
+//   },
+// ];
 
 export const AddressesPageContent = () => {
-  const [addresses] = useState<Address[]>(MOCK_ADDRESSES);
+  // const [addresses] = useState<Address[]>(MOCK_ADDRESSES);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+
+  const { data: addresses, isFetching: isAddressesFetching, isError, isSuccess } = useGetCustomerAddressesQuery({ addressesCount: 10 });
+
+  console.log("addresses:", addresses)
 
   const openAddModal = () => {
     setEditingAddress(null);
@@ -65,6 +58,16 @@ export const AddressesPageContent = () => {
     setIsModalOpen(false);
     setEditingAddress(null);
   };
+
+  if (isAddressesFetching) {
+    return <>Loading...</>
+  }
+
+  if (isError) {
+    return <>Something went wrong</>
+  }
+
+  if (!isSuccess) return null;
 
   return (
     <div className="mt-4 w-full">
@@ -91,39 +94,39 @@ export const AddressesPageContent = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {addresses.map((address) => (
+          {addresses.map((address, i) => (
             <div
-              key={address.id}
+              key={address.node.id}
               className="border border-gray-200 rounded-lg p-4 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <p className="font-semibold">
-                    {address.firstName} {address.lastName}
+                    {address.node.firstName} {address.node.lastName}
                   </p>
-                  {address.isDefault && (
-                    <span className="inline-block text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
-                      Default
-                    </span>
-                  )}
+                  {/*{address.isDefault && (*/}
+                  {/*  <span className="inline-block text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">*/}
+                  {/*    Default*/}
+                  {/*  </span>*/}
+                  {/*)}*/}
                 </div>
 
                 <div className="text-sm text-gray-600 space-y-0.5">
-                  {address.company && <p>{address.company}</p>}
-                  <p>{address.address1}</p>
-                  {address.address2 && <p>{address.address2}</p>}
+                  {address.node.company && <p>{address.node.company}</p>}
+                  <p>{address.node.address1}</p>
+                  {address.node.address2 && <p>{address.node.address2}</p>}
                   <p>
-                    {address.city}, {address.province} {address.zip}
+                    {address.node.city}, {address.node.province} {address.node.zip}
                   </p>
-                  <p>{address.country}</p>
-                  {address.phone && <p className="pt-1">{address.phone}</p>}
+                  <p>{address.node.country}</p>
+                  {address.node.phoneNumber && <p className="pt-1">{address.node.phoneNumber}</p>}
                 </div>
               </div>
 
               <div className="mt-4 flex gap-2">
                 <button
                   type="button"
-                  onClick={() => openEditModal(address)}
+                  onClick={() => openEditModal(address.node)}
                   className="inline-flex items-center gap-1 text-sm border border-gray-300 px-3 py-1.5 rounded-md hover:bg-gray-50 transition cursor-pointer"
                 >
                   <Pencil className="w-3.5 h-3.5" />
@@ -268,14 +271,15 @@ const AddressFormModal: React.FC<ModalProps> = ({ isOpen, onClose, address }) =>
                   label="Phone"
                   name="phone"
                   type="tel"
-                  defaultValue={address?.phone}
+                  defaultValue={address?.phoneNumber}
                 />
               </div>
 
               <label className="flex items-center gap-2 text-sm text-gray-700 pt-1">
                 <input
                   type="checkbox"
-                  defaultChecked={address?.isDefault}
+                  // defaultChecked={address?.isDefault}
+                  defaultChecked={true}
                   className="rounded border-gray-300"
                 />
                 Set as default address
